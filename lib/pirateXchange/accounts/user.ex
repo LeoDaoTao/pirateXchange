@@ -9,7 +9,6 @@ defmodule PirateXchange.Accounts.User do
 
   @available_params [:name]
 
-  @doc false
   def changeset(user, params \\ %{}) do
     user
     |> cast(params, @available_params)
