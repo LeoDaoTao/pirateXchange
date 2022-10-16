@@ -1,4 +1,4 @@
-defmodule PirateXchange.CurrenciesTest do
+defmodule PirateXchange.CurrenciesExample do
   use PirateXchange.DataCase
 
   alias PirateXchange.Currencies

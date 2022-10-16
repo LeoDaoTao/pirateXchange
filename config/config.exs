@@ -37,6 +37,11 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+#EctoShorts config
+config :ecto_shorts,
+  repo: PirateXchange.Repo,
+  error_module: EctoShorts.Actions.Error
+
 # Application Configuration
 config :pirateXchange,
   available_currencies: [:USD, :EUR, :PLN],
