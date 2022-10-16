@@ -37,14 +37,31 @@ defmodule PirateXchange.AccountsTest do
   end
 
   describe "all_users/0" do
-    setup [:setup_users]
+    setup [:users]
 
     test "should return all users", %{users: users} do
       assert ^users = Accounts.all_users()
     end
   end
 
-  defp setup_users(_ctx) do
+  describe "find_user/1" do
+    setup [:user]
+
+    test "should find a user by id", %{user: %{id: id}} do
+      assert {:ok, %User{id: ^id}}= Accounts.find_user(%{id: id})
+    end
+
+    test "should find a user by email", %{user: %{email: email}} do
+      assert {:ok, %User{email: ^email}}= Accounts.find_user(%{email: email})
+    end
+  end
+
+  defp user(_ctx) do
+    {:ok, user} = Accounts.create_user(@valid_user_params)
+    %{user: user}
+  end
+
+  defp users(_ctx) do
     Accounts.create_user(@valid_user_params)
     Accounts.create_user(@valid_user2_params)
     %{users: Repo.all(User)}
