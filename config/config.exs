@@ -50,3 +50,8 @@ config :pirateXchange,
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
+
+#Configure auto test runner for dev
+if config_env() == :dev do
+  config :mix_test_watch, clear: true
+end

@@ -1,23 +1,32 @@
 defmodule PirateXchange.Accounts.User do
-  alias __MODULE__
+  alias PirateXchange.Wallets.Wallet
   use Ecto.Schema
-  import Ecto.{Changeset, Query}
+  import Ecto.Changeset
+
+  @required_params [:name, :email]
+
+  @type t :: %__MODULE__{
+    id: pos_integer,
+    name: String.t,
+    email: String.t,
+  }
 
   schema "users" do
-    field :name, :string
+    field :name,  :string
+    field :email, :string
+
+    has_many :wallets, Wallet
   end
 
-  @available_params [:name]
 
+  @spec changeset(t, map) :: Ecto.Changeset.t
   def changeset(user, params \\ %{}) do
     user
-    |> cast(params, @available_params)
-    |> validate_required([:name])
+    |> cast(params, @required_params)
+    |> validate_required(@required_params)
+    |> unique_constraint(:email)
   end
 
+  @spec create_changeset(map) :: Ecto.Changeset.t
   def create_changeset(params \\ %{}), do: changeset(%__MODULE__{}, params)
-
-  def from(query \\ User), do: from(query, as: :user)
-
-  def by_id(query \\ from(), id), do: where(query, id: ^id)
 end
