@@ -25,14 +25,14 @@ defmodule PirateXchange.AccountsTest do
       assert {:error, %Ecto.Changeset{} = changeset} =
         Accounts.create_user(@valid_user_params)
 
-      assert %{email: ["has already been taken"]} == errors_on(changeset)
+      assert %{email: ["has already been taken"]} = errors_on(changeset)
     end
 
     test "should not create user with invalid params" do
       assert {:error, %Ecto.Changeset{} = changeset} =
         Accounts.create_user(@invalid_user_params)
 
-      assert %{email: ["can't be blank"], name: ["can't be blank"]} == errors_on(changeset)
+      assert %{email: ["can't be blank"], name: ["can't be blank"]} = errors_on(changeset)
     end
   end
 
@@ -40,7 +40,7 @@ defmodule PirateXchange.AccountsTest do
     setup [:setup_users]
 
     test "should return all users", %{users: users} do
-      assert users = Accounts.all_users()
+      assert ^users = Accounts.all_users()
     end
   end
 
