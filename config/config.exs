@@ -44,7 +44,7 @@ config :ecto_shorts,
 
 # Application Configuration
 config :pirateXchange,
-  available_currencies: [:USD, :EUR, :PLN],
+  available_currencies: [:USD, :EUR, :PLN, :CAD],
   fx_api: "http://localhost:4001/"
 
 # Import environment specific config. This must remain at the bottom
