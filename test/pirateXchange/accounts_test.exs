@@ -48,11 +48,11 @@ defmodule PirateXchange.AccountsTest do
     setup [:user]
 
     test "should find a user by id", %{user: %{id: id}} do
-      assert {:ok, %User{id: ^id}}= Accounts.find_user(%{id: id})
+      assert {:ok, %User{id: ^id}} = Accounts.find_user(%{id: id})
     end
 
     test "should find a user by email", %{user: %{email: email}} do
-      assert {:ok, %User{email: ^email}}= Accounts.find_user(%{email: email})
+      assert {:ok, %User{email: ^email}} = Accounts.find_user(%{email: email})
     end
   end
 

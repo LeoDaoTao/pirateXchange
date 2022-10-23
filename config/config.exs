@@ -45,12 +45,11 @@ config :ecto_shorts,
 # Application Configuration
 config :pirateXchange,
   available_currencies: [:USD, :EUR, :PLN, :CAD],
-  fx_api: "http://localhost:4001/"
+  fx_api: "http://localhost:4001/query/"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"
-
 #Configure auto test runner for dev
 if config_env() == :dev do
   config :mix_test_watch, clear: true

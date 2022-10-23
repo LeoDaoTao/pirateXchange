@@ -4,11 +4,11 @@ defmodule PirateXchange.Repo.Migrations.CreateWallets do
   def change do
     create table(:wallets) do
       add :user_id, references(:users, on_delete: :delete_all)
-      add :currency_id, references(:currencies, on_delete: :delete_all)
+      add :currency, :string
       add :amount_in_integer_pips, :integer
     end
 
     create index(:wallets, [:user_id])
-    create index(:wallets, [:currency_id])
+    create index(:wallets, [:currency])
   end
 end

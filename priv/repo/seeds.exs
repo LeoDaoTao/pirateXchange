@@ -9,10 +9,4 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
-alias PirateXchange.Repo
-alias PirateXchange.Currencies.Currency
-
-Repo.delete_all(Currency)
-for currency <- Application.get_env(:pirateXchange, :available_currencies) do
-  Repo.insert!(%Currency{code: Atom.to_string(currency)})
-end
+#alias PirateXchange.Repo

@@ -4,7 +4,8 @@ defmodule PirateXchange.Wallets.Wallet do
 
   schema "wallets" do
     belongs_to :user, PirateXchange.Accounts.User
-    belongs_to :currency, PirateXchange.Currencies.Currency
+    #TODO: Figure out how deleting a currency in config affects db enums
+    field :currency, Ecto.Enum, values: PirateXchange.Currencies.available()
     field :amount_in_cents, :integer
     field :default, :boolean
   end
