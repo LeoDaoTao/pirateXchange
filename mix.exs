@@ -52,8 +52,8 @@ defmodule PirateXchange.MixProject do
       {:ecto_shorts, "~> 2.0"},
 
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
-
-      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false}
+      {:mox, "~> 1.0", only: :test},
+      {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
     ]
   end
 

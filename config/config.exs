@@ -45,7 +45,8 @@ config :ecto_shorts,
 # Application Configuration
 config :pirateXchange,
   available_currencies: [:USD, :EUR, :PLN, :CAD],
-  fx_api: "http://localhost:4001/query/"
+  fx_api: PirateXchange.FxRates.FxRateApi,
+  fx_api_url: "http://localhost:4001/query"
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
