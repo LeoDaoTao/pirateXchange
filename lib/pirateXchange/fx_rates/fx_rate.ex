@@ -1,7 +1,8 @@
 defmodule PirateXchange.FxRates.FxRate do
   alias PirateXchange.Currencies.Currency
+  alias PirateXchange.FxRates.FxRateApi
 
-  @fx_api Application.compile_env(:pirateXchange, :fx_api)
+  @fx_api_url Application.compile_env(:pirateXchange, :fx_api_url)
 
   @enforce_keys [:from_currency, :to_currency, :rate]
   defstruct [:from_currency, :to_currency, :rate]
@@ -12,9 +13,9 @@ defmodule PirateXchange.FxRates.FxRate do
     rate: String.t
   }
 
-  @spec get_rate(:atom, :atom) :: {:ok, t} | {:error, :atom}
-  def get_rate(from_currency, to_currency) do
-    case @fx_api.get_rate(from_currency, to_currency) do
+  @spec get_rate(:atom, :atom, String.t ) :: {:ok, t} | {:error, :atom}
+  def get_rate(from_currency, to_currency, url \\ @fx_api_url) do
+    case FxRateApi.get_rate(from_currency, to_currency, url) do
       {:ok, res} ->
         {:ok, %__MODULE__{
           from_currency: from_currency,

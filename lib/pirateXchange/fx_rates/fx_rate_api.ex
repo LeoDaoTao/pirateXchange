@@ -1,21 +1,16 @@
 defmodule PirateXchange.FxRates.FxRateApi do
   @fx_api_url Application.compile_env(:pirateXchange, :fx_api_url)
 
-  @spec get_rate(:atom, :atom, any | :live_api) :: {:ok, String.t} | {:error, :atom}
-  def get_rate(from_currency, to_currency, injected_res \\ :live_api) do
-    case injected_res do
-      :live_api ->
-        from_currency
-        |> fetch_from_live_api(to_currency)
-        |> handle_response()
-
-      _ -> handle_response(injected_res)
-    end
+  @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | {:error, :atom}
+  def get_rate(from_currency, to_currency, url \\ @fx_api_url) do
+    from_currency
+    |> fetch_from_external_api(to_currency, url)
+    |> handle_response()
   end
 
-  @spec fetch_from_live_api(:atom, :atom) :: {:ok, HTTPoison.Response.t} | {:error, :atom}
-  defp fetch_from_live_api(from_currency, to_currency) do
-    HTTPoison.get(@fx_api_url, [],
+  @spec fetch_from_external_api(:atom, :atom, String.t) :: {:ok, HTTPoison.Response.t} | {:error, HTTPoison.Error.t}
+  defp fetch_from_external_api(from_currency, to_currency, url) do
+    HTTPoison.get(url, [],
       params: [
         function: "CURRENCY_EXCHANGE_RATE",
         from_currency: from_currency,
