@@ -1,4 +1,4 @@
-defmodule PirateXchange.FxRates.FxRatesTest do
+defmodule PirateXchange.FxRates.FxRateTest do
   use ExUnit.Case
   require Application
 
@@ -32,6 +32,11 @@ defmodule PirateXchange.FxRates.FxRatesTest do
 
       assert {:error, :json_decoding_error} ==
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
+    end
+
+    test "should return {:error, :same_currency} when same currency provided" do
+      assert {:error, :same_currency} ==
+        FxRate.get_rate(:USD, :USD)
     end
 
     test "should return {:error, :econnrefused} on api timeout", %{bypass: bypass} do

@@ -27,6 +27,7 @@ defmodule PirateXchange.Accounts.User do
     |> unique_constraint(:email)
   end
 
+  @spec create_changeset() :: Ecto.Changeset.t
   @spec create_changeset(map) :: Ecto.Changeset.t
   def create_changeset(params \\ %{}), do: changeset(%__MODULE__{}, params)
 end

@@ -13,7 +13,7 @@ defmodule PirateXchange.FxRates.FxRate do
     rate: String.t
   }
 
-  @spec get_rate(:atom, :atom, String.t ) :: {:ok, t} | {:error, :atom}
+  @spec get_rate(atom, atom, String.t ) :: {:ok, t} | {:error, atom}
   def get_rate(from_currency, to_currency, url \\ @fx_api_url) do
     case FxRateApi.get_rate(from_currency, to_currency, url) do
       {:ok, res} ->

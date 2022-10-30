@@ -2,11 +2,18 @@ defmodule PirateXchange.FxRates.FxRateApi do
   @fx_api_url Application.compile_env(:pirateXchange, :fx_api_url)
 
   @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | {:error, :atom}
-  def get_rate(from_currency, to_currency, url \\ @fx_api_url) do
+  def get_rate(from_currency, to_currency, url \\ @fx_api_url)
+
+  def get_rate(from_currency, to_currency, _url) when from_currency === to_currency do
+    {:error, :same_currency}
+  end
+
+  def get_rate(from_currency, to_currency, url) do
     from_currency
     |> fetch_from_external_api(to_currency, url)
     |> handle_response()
   end
+
 
   @spec fetch_from_external_api(:atom, :atom, String.t) :: {:ok, HTTPoison.Response.t} | {:error, HTTPoison.Error.t}
   defp fetch_from_external_api(from_currency, to_currency, url) do

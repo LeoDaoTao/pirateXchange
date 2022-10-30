@@ -3,6 +3,13 @@ defmodule PirateXchange.Application do
   # for more information on OTP Applications
   @moduledoc false
 
+  alias PirateXchange.FxRates.FxRateTask
+
+  # ConCache Settigns
+  @global_ttl Application.compile_env(:pirateXchange, :global_ttl)
+  @ttl_check_interval Application.compile_env(:pirateXchange, :ttl_check_interval)
+  @available_currencies Application.compile_env(:pirateXchange, :available_currencies)
+
   use Application
 
   @impl true
@@ -15,10 +22,15 @@ defmodule PirateXchange.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: PirateXchange.PubSub},
       # Start the Endpoint (http/https)
-      PirateXchangeWeb.Endpoint
-      # Start a worker by calling: PirateXchange.Worker.start_link(arg)
-      # {PirateXchange.Worker, arg}
-    ]
+      PirateXchangeWeb.Endpoint,
+      {ConCache,
+         [
+           name: :fx_rate_cache,
+           global_ttl: @global_ttl,
+           ttl_check_interval: @ttl_check_interval,
+           touch_on_read: false
+         ]}
+    ] ++ start_fx_rate_tasks()
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
@@ -32,5 +44,13 @@ defmodule PirateXchange.Application do
   def config_change(changed, _new, removed) do
     PirateXchangeWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  def start_fx_rate_tasks do
+    for from_currency <- @available_currencies,
+        to_currency   <- @available_currencies,
+        from_currency !== to_currency do
+      FxRateTask.child_spec({from_currency, to_currency})
+    end
   end
 end

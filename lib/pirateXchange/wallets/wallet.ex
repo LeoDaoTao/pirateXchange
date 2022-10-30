@@ -4,16 +4,21 @@ defmodule PirateXchange.Wallets.Wallet do
 
   schema "wallets" do
     belongs_to :user, PirateXchange.Accounts.User
-    #TODO: Figure out how deleting a currency in config affects db enums
+
     field :currency, Ecto.Enum, values: PirateXchange.Currencies.available()
-    field :amount_in_cents, :integer
-    field :default, :boolean
+    field :integer_amount, :integer
   end
+
+  @required_params [:user_id, :currency, :integer_amount]
 
   @doc false
   def changeset(wallet, attrs) do
     wallet
-    |> cast(attrs, [:amount_in_cents])
-    |> validate_required([:amount_in_cents])
+    |> cast(attrs, @required_params)
+    |> validate_required(@required_params)
+    |> foreign_key_constraint(:user_id)
+    |> unique_constraint(:unique_user_wallet, name: :unique_wallet_index)
   end
+
+  def create_changeset(params \\ %{}), do: changeset(%__MODULE__{}, params)
 end

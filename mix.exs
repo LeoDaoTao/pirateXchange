@@ -43,6 +43,7 @@ defmodule PirateXchange.MixProject do
       {:jason, "~> 1.2"},
       {:httpoison, "~> 1.8"},
       {:plug_cowboy, "~> 2.5"},
+      {:con_cache, "~> 0.13"},
 
       {:absinthe, "~> 1.6"},
       {:absinthe_plug, "~> 1.5"},

@@ -3,12 +3,13 @@ defmodule PirateXchange.Repo.Migrations.CreateWallets do
 
   def change do
     create table(:wallets) do
-      add :user_id, references(:users, on_delete: :delete_all)
+      add :user_id, references(:users, on_delete: :delete_all), null: false
       add :currency, :string
-      add :amount_in_integer_pips, :integer
+      add :integer_amount, :integer
     end
 
     create index(:wallets, [:user_id])
     create index(:wallets, [:currency])
+    create unique_index(:wallets, [:user_id, :currency], name: :unique_wallet_index)
   end
 end

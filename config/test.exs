@@ -13,6 +13,11 @@ config :pirateXchange, PirateXchange.Repo,
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
+# Application Configuration (Test Env)
+config :pirateXchange,
+  global_ttl: 50,
+  ttl_check_interval: 10
+
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
 config :pirateXchange, PirateXchangeWeb.Endpoint,
