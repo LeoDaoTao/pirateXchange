@@ -22,22 +22,21 @@ defmodule PirateXchange.Currencies.Money do
         %__MODULE__{code: code1, amount: add_two_money_amounts(amt1, amt2)}
   end
 
-  #convert integer pips to decimal pips in string form
-  #for display use only
-  #will work with all curriecies except JPY, which uses
-  #a two digit pip format instead of a 4 digit pip
+  # convert integer pips to decimal pips in string form
+  # for display use only
+  # app uses 2 digit pips instead of standard FX 4 digit pips
   @spec to_pips(integer) :: String.t
   defp to_pips(amount) do
     amount
-    |> Kernel./(10_000)
-    |> :erlang.float_to_binary(decimals: 4)
+    |> Kernel./(100)
+    |> :erlang.float_to_binary(decimals: 2)
   end
 
   @spec string_to_integer_pips(String.t) :: integer
   defp string_to_integer_pips(numeric_string) do
     numeric_string
     |> ensure_decimal_point()
-    |> ensure_4_pips()
+    |> ensure_2_pips()
     |> String.replace(".", "")
     |> String.to_integer
   end
@@ -51,21 +50,21 @@ defmodule PirateXchange.Currencies.Money do
   defp ensure_decimal_point(numeric_string) do
     case String.contains?(numeric_string, ".") do
       true -> numeric_string
-      _    -> numeric_string <> ".0000"
+      _    -> numeric_string <> ".00"
     end
   end
 
-  @spec ensure_4_pips(String.t) :: String.t
-  defp ensure_4_pips(numeric_string) do
+  @spec ensure_2_pips(String.t) :: String.t
+  defp ensure_2_pips(numeric_string) do
     [whole, decimal] = String.split(numeric_string, ".")
-    "#{whole}.#{ensure_4_digits(decimal)}"
+    "#{whole}.#{ensure_2_digits(decimal)}"
   end
 
   #if used in production it should have proper rounding
-  @spec ensure_4_digits(String.t) :: String.t
-  defp ensure_4_digits(numeric_string) do
+  @spec ensure_2_digits(String.t) :: String.t
+  defp ensure_2_digits(numeric_string) do
     numeric_string
-    |> String.slice(0..3)
-    |> String.pad_trailing(4, "0")
+    |> String.slice(0..1)
+    |> String.pad_trailing(2, "0")
   end
 end

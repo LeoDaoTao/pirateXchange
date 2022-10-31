@@ -2,6 +2,13 @@ defmodule PirateXchange.Wallets.Wallet do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @typep currency :: PirateXchange.Currencies.Currency.t
+  @type t :: %__MODULE__{
+    id: pos_integer,
+    currency: currency,
+    integer_amount: integer
+  }
+
   schema "wallets" do
     belongs_to :user, PirateXchange.Accounts.User
 

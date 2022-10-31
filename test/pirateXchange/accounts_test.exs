@@ -1,10 +1,8 @@
 defmodule PirateXchange.AccountsTest do
   use PirateXchange.DataCase
 
-  alias PirateXchange.{
-    Accounts,
-    Accounts.User
-  }
+  alias PirateXchange.Accounts
+  alias PirateXchange.Accounts.User
 
   @valid_user_params %{name: "Jack Sparrow", email: "sparrow@theblackperl.com"}
   @valid_user2_params %{name: "Blackbeard", email: "unshaven@queensrevenge.com"}
