@@ -34,8 +34,8 @@ defmodule PirateXchange.FxRates.FxRateTest do
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
     end
 
-    test "should return {:error, :same_currency} when same currency provided" do
-      assert {:error, :same_currency} ==
+    test "should return {:ok, %FxRate{..., rate: '1'}} when same currency provided" do
+      assert {:ok, %FxRate{from_currency: :USD, to_currency: :USD, rate: "1"}} ==
         FxRate.get_rate(:USD, :USD)
     end
 

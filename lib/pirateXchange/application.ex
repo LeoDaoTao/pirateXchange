@@ -46,10 +46,11 @@ defmodule PirateXchange.Application do
     :ok
   end
 
+  # start fx rate cache and updates via tasks
+  # same currecy has exchange rate of "1"
   def start_fx_rate_tasks do
     for from_currency <- @available_currencies,
-        to_currency   <- @available_currencies,
-        from_currency !== to_currency do
+        to_currency   <- @available_currencies do
       FxRateTask.child_spec({from_currency, to_currency})
     end
   end

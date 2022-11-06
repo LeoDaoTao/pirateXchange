@@ -2,7 +2,7 @@ defmodule PirateXchange.Currencies.Money do
   @enforce_keys [:code, :amount]
   defstruct(
     code: :USD,
-    amount: "0.0000"
+    amount: "0.00"
   )
 
   @type t :: %__MODULE__{
@@ -26,14 +26,14 @@ defmodule PirateXchange.Currencies.Money do
   # for display use only
   # app uses 2 digit pips instead of standard FX 4 digit pips
   @spec to_pips(integer) :: String.t
-  defp to_pips(amount) do
+  def to_pips(amount) do
     amount
     |> Kernel./(100)
     |> :erlang.float_to_binary(decimals: 2)
   end
 
   @spec string_to_integer_pips(String.t) :: integer
-  defp string_to_integer_pips(numeric_string) do
+  def string_to_integer_pips(numeric_string) do
     numeric_string
     |> ensure_decimal_point()
     |> ensure_2_pips()

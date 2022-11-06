@@ -46,6 +46,7 @@ config :ecto_shorts,
 config :pirateXchange,
   available_currencies: [:USD, :EUR, :PLN, :CAD],
   fx_api_url: "http://localhost:4001/query",
+  fx_rate_cache: :fx_rate_cache,
   global_ttl: 2000,
   ttl_check_interval: 1000
 

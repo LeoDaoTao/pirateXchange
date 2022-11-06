@@ -23,6 +23,7 @@ defmodule PirateXchange.Accounts.User do
   def changeset(user, params \\ %{}) do
     user
     |> cast(params, @required_params)
+    |> cast_assoc(:wallets)
     |> validate_required(@required_params)
     |> unique_constraint(:email)
   end

@@ -5,7 +5,7 @@ defmodule PirateXchange.FxRates.FxRateApi do
   def get_rate(from_currency, to_currency, url \\ @fx_api_url)
 
   def get_rate(from_currency, to_currency, _url) when from_currency === to_currency do
-    {:error, :same_currency}
+    {:ok, "1"}
   end
 
   def get_rate(from_currency, to_currency, url) do
