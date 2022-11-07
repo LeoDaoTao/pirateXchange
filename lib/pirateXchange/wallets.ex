@@ -40,7 +40,7 @@ defmodule PirateXchange.Wallets do
                                                                                   | {:error, :user_not_found}
                                                                                   | {:error, :fx_rate_not_available}
   def user_total_worth(%{user_id: user_id, to_currency: to_currency}) do
-    with {:wallets_exist?,  {:ok, wallets}} <- {:wallets_exist?, find_user_wallets(%{user_id: user_id})},
+    with {:wallets_exist?,  {:ok, wallets}}  <- {:wallets_exist?, find_user_wallets(%{user_id: user_id})},
          {:rate_available?, {:ok, total}}    <- {:rate_available?, integer_total_in_currency(wallets, to_currency)} do
       {:ok, %Money{code: to_currency, amount: Money.to_pips(total)}}
     else
@@ -67,10 +67,7 @@ defmodule PirateXchange.Wallets do
     |> Money.string_to_integer_pips()
     |> Kernel.*(integer_amount)
   end
-  #Add send money functions here
-  #
-  #
-  #
+
   defp format_errors(changeset) do
     case errors(changeset) do
       %{currency: ["is invalid"]} -> {:error, "Currency not allowed"}

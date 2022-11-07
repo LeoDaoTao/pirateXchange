@@ -1,6 +1,7 @@
 defmodule PirateXchange.Wallets.Wallet do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   @typep currency :: PirateXchange.Currencies.Currency.t
   @type t :: %__MODULE__{
@@ -28,4 +29,25 @@ defmodule PirateXchange.Wallets.Wallet do
   end
 
   def create_changeset(params \\ %{}), do: changeset(%__MODULE__{}, params)
+
+  def from(query \\ __MODULE__), do: from(query, as: :wallet)
+
+  @spec by_user_id(non_neg_integer) :: Ecto.Query.t
+  def by_user_id(query \\ from(), user_id) do
+    where(query, user_id: ^user_id)
+  end
+
+  @spec by_currency(non_neg_integer) :: Ecto.Query.t
+  def by_currency(query \\ from(), currency) do
+    where(query, currency: ^currency)
+  end
+
+  @spec by_user_id_and_currency(Ecto.Queryable.t, non_neg_integer, currency) :: Ecto.Query.t
+  def by_user_id_and_currency(query \\ __MODULE__, user_id, currency) do
+    query
+    |> by_user_id(user_id)
+    |> by_currency(currency)
+  end
+
+  def lock_wallet(query \\ Wallet), do: lock(query, "FOR UPDATE NOWAIT")
 end
