@@ -1,10 +1,10 @@
 defmodule PirateXchange.Wallets do
+  alias EctoShorts.Actions
+  alias PirateXchange.Accounts.User
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.Currencies.Money
   alias PirateXchange.FxRates
-  alias PirateXchange.Accounts.User
   alias PirateXchange.Wallets.Wallet
-  alias EctoShorts.Actions
 
   @spec create_wallet(%{user_id: pos_integer, curreny: Currency.t, integer_amount: integer}) :: {:ok, Wallet.t} | {:error, String.t}
   def create_wallet(%{user_id: user_id, currency: currency, integer_amount: integer_amount}) do
@@ -37,16 +37,26 @@ defmodule PirateXchange.Wallets do
   end
 
   @spec user_total_worth(%{user_id: pos_integer, to_currency: Currency.t}) :: {:ok, Money.t}
-                                                                                  | {:error, :user_not_found}
-                                                                                  | {:error, :fx_rate_not_available}
+                                                                              | {:error, :user_not_found}
+                                                                              | {:error, :fx_rate_not_available}
   def user_total_worth(%{user_id: user_id, to_currency: to_currency}) do
-    with {:wallets_exist?,  {:ok, wallets}}  <- {:wallets_exist?, find_user_wallets(%{user_id: user_id})},
-         {:rate_available?, {:ok, total}}    <- {:rate_available?, integer_total_in_currency(wallets, to_currency)} do
+    with {:wallets_exist?,  {:ok, wallets}}
+            <- {:wallets_exist?, find_user_wallets(%{user_id: user_id})},
+
+         {:rate_available?, {:ok, total}}
+            <- {:rate_available?, integer_total_in_currency(wallets, to_currency)} do
+
       {:ok, %Money{code: to_currency, amount: Money.to_pips(total)}}
+
     else
-      {:wallets_exist?,  {:error, :wallets_not_found}}     -> {:ok,    %Money{code: to_currency, amount: "0.00"}}
-      {:wallets_exist?,  {:error, :user_not_found}}        -> {:error, :user_not_found}
-      {:rate_available?, {:error, :fx_rate_not_available}} -> {:error, :fx_rate_not_available}
+      {:wallets_exist?,  {:error, :wallets_not_found}}
+        -> {:ok,    %Money{code: to_currency, amount: "0.00"}}
+
+      {:wallets_exist?,  {:error, :user_not_found}}
+        -> {:error, :user_not_found}
+
+      {:rate_available?, {:error, :fx_rate_not_available}}
+        -> {:error, :fx_rate_not_available}
     end
   end
 
@@ -70,8 +80,8 @@ defmodule PirateXchange.Wallets do
 
   defp format_errors(changeset) do
     case errors(changeset) do
-      %{currency: ["is invalid"]} -> {:error, "Currency not allowed"}
-      %{unique_user_wallet: ["has already been taken"]} -> {:error, "Wallet already exists"}
+      %{currency: ["is invalid"]} -> {:error, :currency_not_allowed}
+      %{unique_user_wallet: ["has already been taken"]} -> {:error, :wallet_exists}
     end
   end
 

@@ -21,7 +21,7 @@ defmodule PirateXchange.Accounts.Transfer do
     :to_currency
   ]
 
-  @type t :: %{
+  @type t :: %__MODULE__{
     from_user_id: non_neg_integer,
     from_currency: Currency.t,
     integer_amount: non_neg_integer,
@@ -29,6 +29,7 @@ defmodule PirateXchange.Accounts.Transfer do
     to_currency: Currency.t
   }
 
+  @spec send(t) :: {:ok, :transfer_successful} | {:error, atom}
   def send(transfer = %__MODULE__{}) do
     res = Ecto.Multi.new()
     |> Ecto.Multi.put(:transfer, transfer)
@@ -44,7 +45,11 @@ defmodule PirateXchange.Accounts.Transfer do
 
     case res do
       {:ok, _} -> {:ok, :transfer_successful}
-      {:error, _} -> {:error, :transfer_failed}
+      {:error, :verify_wallets, :wallet_from_not_found, _} -> {:error, :wallet_from_not_found}
+      {:error, :verify_wallets, :wallet_to_not_found, _}   -> {:error, :wallet_to_not_found}
+      {:error, :verify_balance, :insufficient_balance, _}  -> {:error, :insufficient_balance}
+      {:error, :fx_rate, :fx_rate_not_available, _}        -> {:error, :fx_rate_not_available}
+      {:error, _}                                          -> {:error, :transfer_failed}
     end
   end
 
@@ -79,13 +84,13 @@ defmodule PirateXchange.Accounts.Transfer do
 
   defp get_fx_rate(_multi, %{transfer: transfer}) do
     case FxRates.get(transfer.from_currency, transfer.to_currency) do
-      {:ok, rate} -> {:ok, Money.string_to_integer_pips(rate)}
+      {:ok, rate} -> {:ok, String.to_float(rate)}
       _error      -> {:error, :fx_rate_not_available}
     end
   end
 
   defp fx_amount(_multi, %{transfer: transfer, fx_rate: fx_rate}) do
-    {:ok, transfer.integer_amount * fx_rate}
+    {:ok, round(transfer.integer_amount * fx_rate)}
   end
 
   defp debit_wallet(%{from_wallet: from_wallet, transfer: transfer}) do

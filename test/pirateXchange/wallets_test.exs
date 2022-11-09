@@ -1,7 +1,7 @@
 defmodule PirateXchange.WalletsTest do
   use PirateXchange.DataCase
 
-  import PirateXchange.WalletsFixtures
+  import PirateXchange.UserFixtures
 
   alias PirateXchange.FxRates
   alias PirateXchange.FxRates.FxRate
@@ -24,15 +24,15 @@ defmodule PirateXchange.WalletsTest do
       assert [%Wallet{user_id: ^user_id, integer_amount: 10_000}] = Repo.all(Wallet)
     end
 
-    test "should not create a wallet with invalid currency & return {:error, 'Currency not allowed'}", %{user: user} do
-      assert {:error, "Currency not allowed"} = Wallets.create_wallet(%{user_id: user.id, currency: :ARR, integer_amount: 1})
+    test "should not create a wallet with invalid currency & return {:error, :currency_not_allowed}", %{user: user} do
+      assert {:error, :currency_not_allowed} = Wallets.create_wallet(%{user_id: user.id, currency: :ARR, integer_amount: 1})
     end
 
-    test "should not create a wallet with existing currency & return {:error, 'Wallet already exists'}", %{user: user} do
+    test "should not create a wallet with existing currency & return {:error, :wallet_exists}", %{user: user} do
       user_id = user.id
       assert {:ok, %Wallet{user_id: ^user_id, currency: :USD}} = Wallets.create_wallet(%{user_id: user.id, currency: :USD, integer_amount: 1})
 
-      assert {:error, "Wallet already exists"} = Wallets.create_wallet(%{user_id: user.id, currency: :USD, integer_amount: 1})
+      assert {:error, :wallet_exists} = Wallets.create_wallet(%{user_id: user.id, currency: :USD, integer_amount: 1})
     end
   end
 
@@ -43,7 +43,7 @@ defmodule PirateXchange.WalletsTest do
       user_id = user.id
       currency = wallet.currency
 
-      assert {:ok, %Wallet{user_id: ^user_id, currency: :USD, integer_amount: 1000}} =
+      assert {:ok, %Wallet{user_id: ^user_id, currency: :USD, integer_amount: 10_000}} =
         Wallets.find_user_wallet(%{user_id: user_id, currency: currency})
     end
 
@@ -64,7 +64,7 @@ defmodule PirateXchange.WalletsTest do
     end
   end
 
-  describe"user_total_worth/1" do
+  describe "user_total_worth/1" do
     setup [:user, :user_no_wallet, :user_deleted, :wallets]
 
     test "should return {:ok, %Money{}} total worth in target currency", %{user: user} do
@@ -74,7 +74,7 @@ defmodule PirateXchange.WalletsTest do
       assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:PLN, :USD)
       assert {:ok, "1"}    === FxRateCache.get_fx_rate(:USD, :USD)
 
-      assert {:ok, %Money{code: :USD, amount: "2500.00"}} ===
+      assert {:ok, %Money{code: :USD, amount: "25000.00"}} ===
         Wallets.user_total_worth(%{user_id: user.id, to_currency: :USD})
     end
 
