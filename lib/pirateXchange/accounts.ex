@@ -1,6 +1,8 @@
 defmodule PirateXchange.Accounts do
   alias PirateXchange.Accounts.User
+  alias PirateXchange.Accounts.UserInfo
   alias PirateXchange.Accounts.Transfer
+  alias PirateXchange.Currencies.Currency
   alias EctoShorts.Actions
 
   @spec create_user(map) :: {:ok, User.t} | {:error, String.t}
@@ -14,6 +16,10 @@ defmodule PirateXchange.Accounts do
 
   @spec find_user(map) :: {:ok, User.t} | {:error, Ecto.Changeset.t}
   def find_user(params \\ %{}), do: Actions.find(User, params)
+
+  @spec user_total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Money.t}
+                                                                           | {:error, atom}
+  defdelegate user_total_worth(params), to: UserInfo, as: :total_worth
 
   @spec transfer(Transfer.t) :: {:ok, :transfer_successful} | {:error, :transfer_failed}
   defdelegate transfer(transfer), to: Transfer, as: :send

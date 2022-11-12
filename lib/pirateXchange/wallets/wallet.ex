@@ -7,7 +7,8 @@ defmodule PirateXchange.Wallets.Wallet do
   @type t :: %__MODULE__{
     id: pos_integer,
     currency: currency,
-    integer_amount: integer
+    integer_amount: integer,
+    user_id: pos_integer
   }
 
   schema "wallets" do

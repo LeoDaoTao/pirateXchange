@@ -1,5 +1,5 @@
 defmodule PirateXchange.FxRates.FxRateApi do
-  @fx_api_url Application.compile_env(:pirateXchange, :fx_api_url)
+  @fx_api_url Application.get_env(:pirateXchange, :fx_api_url)
 
   @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | {:error, :atom}
   def get_rate(from_currency, to_currency, url \\ @fx_api_url)

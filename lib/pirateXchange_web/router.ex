@@ -5,19 +5,16 @@ defmodule PirateXchangeWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/api", PirateXchangeWeb do
+  scope "/" do
     pipe_through :api
-  end
 
-  # Enables the Swoosh mailbox preview in development.
-  #
-  # Note that preview only shows emails that were sent by the same
-  # node running the Phoenix server.
-  if Mix.env() == :dev do
-    scope "/dev" do
-      pipe_through [:fetch_session, :protect_from_forgery]
+    forward "/graphql", Absinthe.Plug,
+      schema: PirateXchangeWeb.Schema
 
-      forward "/mailbox", Plug.Swoosh.MailboxPreview
+    if Mix.env() === :dev do
+      forward "/graphiql", Absinthe.Plug.GraphiQL,
+        schema: PirateXchangeWeb.Schema,
+        interface: :playground
     end
   end
 end
