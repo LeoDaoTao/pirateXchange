@@ -8,6 +8,11 @@ defmodule PirateXchange.Accounts do
   @spec create_user(map) :: {:ok, User.t} | {:error, String.t}
   def create_user(params), do: Actions.create(User, params)
 
+  @spec update_user(map) :: {:ok, User.t} | {:error, Ecto.Changeset.t}
+  def update_user(params) do
+    Actions.find_and_update(User, %{id: params.id}, Map.delete(params, :id))
+  end
+
   @spec delete_user(integer) :: {:ok, User.t} | {:error, String.t}
   def delete_user(user_id), do: Actions.delete(User, user_id)
 

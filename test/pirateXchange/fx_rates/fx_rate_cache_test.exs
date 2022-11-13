@@ -23,13 +23,5 @@ defmodule PirateXchange.FxRates.FxRateCacheTest do
 
       assert {:ok, "1"} === FxRateCache.get_fx_rate(:USD, :USD)
     end
-
-    test "should expire cache and return {:error, :fx_rate_not_available}" do
-      assert :ok = FxRateCache.put_fx_rate(@fx_rate)
-
-      Process.sleep(100)
-
-      assert {:error, :fx_rate_not_available} === FxRateCache.get_fx_rate(:USD, :PLN)
-    end
   end
 end

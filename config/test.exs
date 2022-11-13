@@ -15,8 +15,8 @@ config :pirateXchange, PirateXchange.Repo,
 
 # Application Configuration (Test Env)
 config :pirateXchange,
-  global_ttl: 50,
-  ttl_check_interval: 10
+  global_ttl: 5000,
+  ttl_check_interval: 1000
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
