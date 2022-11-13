@@ -17,7 +17,7 @@ defmodule PirateXchange.FxRates.FxRateCache do
       ConCache.put(cache_name, to_key(from_currency, to_currency), rate)
   end
 
-  @spec get_fx_rate(currency, currency, atom) :: {:ok, String.t} | {:error, :fx_rate_not_available}
+  @spec get_fx_rate(currency, currency, atom) :: {:ok, String.t} | {:error, ErrorMessage.t}
   def get_fx_rate(from_currency, to_currency, cache_name \\ @cache_name) do
     case ConCache.get(cache_name, to_key(from_currency, to_currency)) do
       nil  -> {:error, :fx_rate_not_available}

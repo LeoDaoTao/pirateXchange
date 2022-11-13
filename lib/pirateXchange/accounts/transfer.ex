@@ -28,7 +28,7 @@ defmodule PirateXchange.Accounts.Transfer do
     to_currency: Currency.t
   }
 
-  @spec send(t) :: {:ok, :transfer_successful} | {:error, atom}
+  @spec send(t) :: {:ok, :transfer_successful} | {:error, ErrorMessage.t}
   def send(transfer = %__MODULE__{}) do
     res = Ecto.Multi.new()
     |> Ecto.Multi.put(:transfer, transfer)
@@ -43,12 +43,23 @@ defmodule PirateXchange.Accounts.Transfer do
     |> Repo.transaction()
 
     case res do
-      {:ok, _} -> {:ok, :transfer_successful}
-      {:error, :verify_wallets, :wallet_from_not_found, _} -> {:error, :wallet_from_not_found}
-      {:error, :verify_wallets, :wallet_to_not_found, _}   -> {:error, :wallet_to_not_found}
-      {:error, :verify_balance, :insufficient_balance, _}  -> {:error, :insufficient_balance}
-      {:error, :fx_rate, :fx_rate_not_available, _}        -> {:error, :fx_rate_not_available}
-      {:error, _}                                          -> {:error, :transfer_failed}
+      {:ok, _}
+        -> {:ok, :transfer_successful}
+
+      {:error, :verify_wallets, :wallet_from_not_found, _}
+        -> {:error, ErrorMessage.not_found("wallet from not found")}
+
+      {:error, :verify_wallets, :wallet_to_not_found, _}
+        -> {:error, ErrorMessage.not_found("wallet to not found")}
+
+      {:error, :verify_balance, :insufficient_balance, _}
+        -> {:error, ErrorMessage.internal_server_error("insufficient balance")}
+
+      {:error, :fx_rate, :fx_rate_not_available, _}
+        -> {:error, ErrorMessage.internal_server_error("fx rate not available")}
+
+      {:error, _}
+        -> {:error, ErrorMessage.internal_server_error("transfer failed")}
     end
   end
 

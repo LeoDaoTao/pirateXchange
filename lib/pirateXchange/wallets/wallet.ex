@@ -11,10 +11,12 @@ defmodule PirateXchange.Wallets.Wallet do
     user_id: pos_integer
   }
 
+  @available_currencies Application.get_env(:pirateXchange, :available_currencies)
+
   schema "wallets" do
     belongs_to :user, PirateXchange.Accounts.User
 
-    field :currency, Ecto.Enum, values: PirateXchange.Currencies.available()
+    field :currency, Ecto.Enum, values: @available_currencies
     field :integer_amount, :integer
   end
 

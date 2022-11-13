@@ -20,10 +20,10 @@ defmodule PirateXchange.Accounts.UserInfo do
         -> {:ok, %Money{code: currency, amount: "0.00"}}
 
       {:wallets_exist?,  {:error, :user_not_found}}
-        -> {:error, :user_not_found}
+        -> {:error, ErrorMessage.not_found("user not found")}
 
       {:rate_available?, {:error, :fx_rate_not_available}}
-        -> {:error, :fx_rate_not_available}
+        -> {:error, ErrorMessage.internal_server_error("fx rate not available")}
     end
   end
 

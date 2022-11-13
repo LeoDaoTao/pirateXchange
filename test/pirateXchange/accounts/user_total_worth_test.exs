@@ -32,12 +32,12 @@ defmodule PirateXchange.Accounts.UserInfoTest do
     end
 
     test "should return {:error, :user_not_found} if user does not exist", %{user_deleted: user_deleted } do
-      assert {:error, :user_not_found} ===
+      assert {:error, %ErrorMessage{code: :not_found, message: "user not found"}} ===
         Accounts.user_total_worth(%{user_id: user_deleted.id, currency: :USD})
     end
 
     test "should return {:error, :fx_rate_not_available} if fx rate is not available", ctx do
-      assert {:error, :fx_rate_not_available} ===
+      assert {:error, %ErrorMessage{code: :internal_server_error, message: "fx rate not available"}} ===
         Accounts.user_total_worth(%{user_id: ctx.user1.id, currency: :ARR})
     end
   end
