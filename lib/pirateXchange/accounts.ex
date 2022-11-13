@@ -24,7 +24,4 @@ defmodule PirateXchange.Accounts do
 
   @spec user_total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Money.t} | {:error, ErrorMessage.t}
   defdelegate user_total_worth(params), to: UserInfo, as: :total_worth
-
-  @spec transfer(Transfer.t) :: {:ok, :transfer_successful} | {:error, ErrorMessage.t}
-  defdelegate transfer(transfer), to: Transfer, as: :send
 end

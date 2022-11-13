@@ -1,4 +1,4 @@
-defmodule PirateXchange.Accounts.Transfer do
+defmodule PirateXchange.Wallets.Transfer do
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.FxRates
   alias PirateXchange.Repo

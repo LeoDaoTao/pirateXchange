@@ -9,6 +9,7 @@ defmodule PirateXchangeWeb.Schema do
   import_types PirateXchangeWeb.Schema.Queries.UserTotalWorth
   import_types PirateXchangeWeb.Schema.Mutations.User
   import_types PirateXchangeWeb.Schema.Mutations.Wallet
+  import_types PirateXchangeWeb.Types.Transfer
   import_types PirateXchangeWeb.Types.Wallet
 
   query do

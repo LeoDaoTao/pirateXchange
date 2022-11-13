@@ -3,6 +3,7 @@ defmodule PirateXchange.Wallets do
   alias PirateXchange.Accounts.User
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.Wallets.Wallet
+  alias PirateXchange.Wallets.Transfer
 
   @spec create_wallet(%{user_id: pos_integer, curreny: Currency.t, integer_amount: integer}) :: {:ok, Wallet.t} | {:error, String.t}
   def create_wallet(%{user_id: user_id, currency: currency, integer_amount: integer_amount}) do
@@ -37,10 +38,13 @@ defmodule PirateXchange.Wallets do
     end
   end
 
+  @spec transfer(Transfer.t) :: {:ok, :transfer_successful} | {:error, ErrorMessage.t}
+  defdelegate transfer(transfer), to: Transfer, as: :send
+
   defp format_errors(changeset) do
     case errors(changeset) do
-      %{currency: ["is invalid"]} -> ErrorMessage.not_found("currency not allowed")
-      %{unique_user_wallet: ["has already been taken"]} -> ErrorMessage.internal_server_error("wallet exists")
+      %{currency: ["is invalid"]} -> {:error, ErrorMessage.not_found("currency not supported")}
+      %{unique_user_wallet: ["has already been taken"]} -> {:error, ErrorMessage.internal_server_error("wallet exists")}
     end
   end
 

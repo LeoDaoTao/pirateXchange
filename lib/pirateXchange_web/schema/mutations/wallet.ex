@@ -11,6 +11,16 @@ defmodule PirateXchangeWeb.Schema.Mutations.Wallet do
 
       resolve &Resolvers.Wallet.create/2
     end
-  end
 
+    @desc "transfers money from one wallet to another"
+    field :transfer, :transfer do
+      arg :from_user_id, non_null(:id)
+      arg :from_currency, non_null(:currency)
+      arg :integer_amount, non_null(:integer)
+      arg :to_user_id, non_null(:id)
+      arg :to_currency, non_null(:currency)
+
+      resolve &Resolvers.Wallet.transfer/2
+    end
+  end
 end
