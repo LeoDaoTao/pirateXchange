@@ -82,8 +82,7 @@ defmodule PirateXchange.WalletsTest do
   describe "transfer/1" do
     setup [:users, :user_no_wallet, :wallets]
 
-    test "should transfer 100.00 USD from one user to 150.00 PLN to another user",
-      ctx do
+    test "should transfer 100.00 USD from one user to 150.00 PLN to another user", ctx do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
@@ -96,7 +95,7 @@ defmodule PirateXchange.WalletsTest do
 
       assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:USD, :PLN)
 
-      assert {:ok, :transfer_successful} === Wallets.transfer(transfer)
+      assert {:ok, %Transfer{}} = Wallets.transfer(transfer)
 
       assert {:ok, %Wallet{currency: :USD, integer_amount: 0}} =
         Wallets.find_user_wallet(%{user_id: ctx.user1.id, currency: :USD})
@@ -144,7 +143,7 @@ defmodule PirateXchange.WalletsTest do
         to_currency: :PLN
       }
 
-      assert {:error, %ErrorMessage{code: :not_found, message: "wallet to not found"}} ===
+      assert {:error, %ErrorMessage{code: :not_found, message: "wallet to not found", details: %{}}} =
         Wallets.transfer(transfer)
     end
 

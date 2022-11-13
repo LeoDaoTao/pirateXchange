@@ -14,14 +14,14 @@ defmodule PirateXchange.Accounts.UserInfoTest do
   describe "total_worth/1" do
     setup [:users, :user_no_wallet, :user_deleted, :wallets]
 
-    test "should return {:ok, %Money{}} total worth in target currency", ctx do
+    test "should return {:ok, %{user_id:, currency:, integer_amount:}} total worth in target currency", ctx do
       assert :ok = FxRateCache.put_fx_rate(@fx_rate_pln)
       assert :ok = FxRateCache.put_fx_rate(@fx_rate_usd)
 
       assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:PLN, :USD)
       assert {:ok, "1"}    === FxRateCache.get_fx_rate(:USD, :USD)
 
-      assert {:ok, %Money{code: :USD, amount: "25000.00"}} ===
+      assert {:ok, %{user_id: ctx.user1.id, currency: :USD, integer_amount: 2500000}} ===
         Accounts.user_total_worth(%{user_id: ctx.user1.id, currency: :USD})
     end
 

@@ -43,14 +43,17 @@ defmodule PirateXchange.Wallets.Transfer do
     |> Repo.transaction()
 
     case res do
-      {:ok, _} ->
-        {:ok, :transfer_successful}
+      {:ok, %{transfer: transfer}}
+        -> {:ok, transfer}
 
       {:error, :verify_wallets, :wallet_from_not_found, _} ->
         {:error, ErrorMessage.not_found("wallet from not found")}
 
       {:error, :verify_wallets, :wallet_to_not_found, _} ->
-        {:error, ErrorMessage.not_found("wallet to not found")}
+        {:error, ErrorMessage.not_found("wallet to not found", %{
+          to_user_id: transfer.to_user_id,
+          to_currency: transfer.to_currency
+        })}
 
       {:error, :verify_balance, :insufficient_balance, _} ->
         {:error, ErrorMessage.internal_server_error("insufficient balance")}

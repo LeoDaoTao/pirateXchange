@@ -1,5 +1,6 @@
 defmodule PirateXchangeWeb.Schema do
   use Absinthe.Schema
+  alias PirateXchangeWeb.Middlewares.Errors
 
   import_types PirateXchangeWeb.Types.Currency
   import_types PirateXchangeWeb.Types.User
@@ -36,5 +37,14 @@ defmodule PirateXchangeWeb.Schema do
 
   def plugins do
     [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
+  end
+
+  def middleware(middleware, _, %{identifier: identifier})
+      when identifier in [:query, :subscription, :mutation] do
+    middleware ++ [Errors]
+  end
+
+  def middleware(middleware, _, _) do
+    middleware
   end
 end

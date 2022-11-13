@@ -3,7 +3,7 @@ defmodule PirateXchange.Accounts.UserInfo do
   alias PirateXchange.FxRates
   alias PirateXchange.Wallets
 
-  @spec total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Money.t} | {:error, ErrorMessage.t}
+  @spec total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, map} | {:error, ErrorMessage.t}
   def total_worth(%{user_id: user_id, currency: currency}) do
     with {:wallets_exist?,  {:ok, wallets}}
             <- {:wallets_exist?, Wallets.find_user_wallets(%{user_id: user_id})},
@@ -11,7 +11,7 @@ defmodule PirateXchange.Accounts.UserInfo do
          {:rate_available?, {:ok, total}}
             <- {:rate_available?, integer_total_in_currency(wallets, currency)} do
 
-      {:ok, %Money{code: currency, amount: Money.to_pips(total)}}
+      {:ok, %{user_id: user_id, currency: currency, integer_amount: total}}
 
     else
       {:wallets_exist?, %ErrorMessage{code: :not_found, message: "wallets not found"}}

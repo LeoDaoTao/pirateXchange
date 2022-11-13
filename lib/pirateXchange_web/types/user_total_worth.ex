@@ -5,6 +5,6 @@ defmodule PirateXchangeWeb.Types.UserTotalWorth do
   object :user_total_worth do
     field :user_id, non_null(:id)
     field :currency, non_null(:currency)
-    field :amount, non_null(:string)
+    field :integer_amount, non_null(:integer)
   end
 end

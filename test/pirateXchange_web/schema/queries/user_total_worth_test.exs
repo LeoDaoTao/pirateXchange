@@ -15,7 +15,7 @@ defmodule PirateXchangeWeb.Schema.Queries.UserTotalWorth do
       userTotalWorth(userId: $userId, currency: $currency) {
         userId
         currency
-        amount
+        integerAmount
       }
     }
   """
@@ -33,7 +33,7 @@ defmodule PirateXchangeWeb.Schema.Queries.UserTotalWorth do
         }
       )
 
-      assert data["userTotalWorth"]["amount"] === "25000.00"
+      assert data["userTotalWorth"]["integerAmount"] === 2500000
     end
   end
 end
