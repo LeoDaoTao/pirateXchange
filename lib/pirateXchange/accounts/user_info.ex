@@ -3,9 +3,7 @@ defmodule PirateXchange.Accounts.UserInfo do
   alias PirateXchange.FxRates
   alias PirateXchange.Wallets
 
-  @spec total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Money.t}
-                                                                      | {:error, :user_not_found}
-                                                                      | {:error, :fx_rate_not_available}
+  @spec total_worth(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Money.t} | {:error, ErrorMessage.t}
   def total_worth(%{user_id: user_id, currency: currency}) do
     with {:wallets_exist?,  {:ok, wallets}}
             <- {:wallets_exist?, Wallets.find_user_wallets(%{user_id: user_id})},
@@ -16,13 +14,13 @@ defmodule PirateXchange.Accounts.UserInfo do
       {:ok, %Money{code: currency, amount: Money.to_pips(total)}}
 
     else
-      {:wallets_exist?,  {:error, :wallets_not_found}}
+      {:wallets_exist?, %ErrorMessage{code: :not_found, message: "wallets not found"}}
         -> {:ok, %Money{code: currency, amount: "0.00"}}
 
-      {:wallets_exist?,  {:error, :user_not_found}}
+      {:wallets_exist?,  %ErrorMessage{code: :not_found, message: "user not found"}}
         -> {:error, ErrorMessage.not_found("user not found")}
 
-      {:rate_available?, {:error, :fx_rate_not_available}}
+      {:rate_available?, %ErrorMessage{code: :internal_server_error, message: "fx rate not available"}}
         -> {:error, ErrorMessage.internal_server_error("fx rate not available")}
     end
   end
@@ -33,8 +31,11 @@ defmodule PirateXchange.Accounts.UserInfo do
       from_currency = wallet.currency
 
       case FxRates.get(from_currency, to_currency) do
-        {:ok, rate} -> {:cont, {:ok, acc + calculate_integer_amount(rate, integer_amount)}}
-        {:error, :fx_rate_not_available} -> {:halt, {:error, :fx_rate_not_available}}
+        {:ok, rate}
+          -> {:cont, {:ok, acc + calculate_integer_amount(rate, integer_amount)}}
+
+        {:error, %ErrorMessage{code: :internal_server_error, message: "fx rate not available"}}
+          -> {:halt, ErrorMessage.internal_server_error("fx rate not available")}
       end
     end)
   end

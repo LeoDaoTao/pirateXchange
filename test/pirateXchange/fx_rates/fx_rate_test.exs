@@ -25,24 +25,24 @@ defmodule PirateXchange.FxRates.FxRateTest do
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
     end
 
-    test "should return {:error, :json_decoding_error} with json error", %{bypass: bypass} do
+    test "should return 'json decoding error' with json error", %{bypass: bypass} do
       Bypass.expect(bypass, fn conn ->
         Plug.Conn.resp(conn, 200, @json_decoding_error_res)
       end)
 
-      assert {:error, :json_decoding_error} ==
+      assert {:error, %ErrorMessage{code: :internal_server_error, message: "json decoding error"}} ===
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
     end
 
     test "should return {:ok, %FxRate{..., rate: '1'}} when same currency provided" do
-      assert {:ok, %FxRate{from_currency: :USD, to_currency: :USD, rate: "1"}} ==
+      assert {:ok, %FxRate{from_currency: :USD, to_currency: :USD, rate: "1"}} ===
         FxRate.get_rate(:USD, :USD)
     end
 
-    test "should return {:error, :econnrefused} on api timeout", %{bypass: bypass} do
+    test "should return 'fx rate server timeout'on api timeout", %{bypass: bypass} do
       Bypass.down(bypass)
 
-      assert {:error, :econnrefused} ==
+      assert {:error, %ErrorMessage{code: :gateway_timeout, message: "fx rate server timeout"}} ===
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
     end
   end

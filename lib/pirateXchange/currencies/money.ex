@@ -10,18 +10,6 @@ defmodule PirateXchange.Currencies.Money do
     amount: String.t
   }
 
-  #TODO: expand function to handle errors and adding
-  #Money from different currencies at current FX rate
-  #Do we need a third param if different currencies?
-  #Possibly add a list of currencies
-  #decide if we want to return a struct or :ok tuple
-  @spec add(t, t) :: t | {:error, String.t}
-  def add(%__MODULE__{code: code1, amount: amt1},
-          %__MODULE__{code: code2, amount: amt2})
-      when code1 === code2 do
-        %__MODULE__{code: code1, amount: add_two_money_amounts(amt1, amt2)}
-  end
-
   # convert integer pips to decimal pips in string form
   # for display use only
   # app uses 2 digit pips instead of standard FX 4 digit pips

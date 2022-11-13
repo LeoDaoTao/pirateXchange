@@ -43,23 +43,23 @@ defmodule PirateXchange.Accounts.Transfer do
     |> Repo.transaction()
 
     case res do
-      {:ok, _}
-        -> {:ok, :transfer_successful}
+      {:ok, _} ->
+        {:ok, :transfer_successful}
 
-      {:error, :verify_wallets, :wallet_from_not_found, _}
-        -> {:error, ErrorMessage.not_found("wallet from not found")}
+      {:error, :verify_wallets, :wallet_from_not_found, _} ->
+        {:error, ErrorMessage.not_found("wallet from not found")}
 
-      {:error, :verify_wallets, :wallet_to_not_found, _}
-        -> {:error, ErrorMessage.not_found("wallet to not found")}
+      {:error, :verify_wallets, :wallet_to_not_found, _} ->
+        {:error, ErrorMessage.not_found("wallet to not found")}
 
-      {:error, :verify_balance, :insufficient_balance, _}
-        -> {:error, ErrorMessage.internal_server_error("insufficient balance")}
+      {:error, :verify_balance, :insufficient_balance, _} ->
+        {:error, ErrorMessage.internal_server_error("insufficient balance")}
 
-      {:error, :fx_rate, :fx_rate_not_available, _}
-        -> {:error, ErrorMessage.internal_server_error("fx rate not available")}
+      {:error, :fx_rate, :fx_rate_not_available, _} ->
+        {:error, ErrorMessage.internal_server_error("fx rate not available")}
 
-      {:error, _}
-        -> {:error, ErrorMessage.internal_server_error("transfer failed")}
+      {:error, _} ->
+        {:error, ErrorMessage.internal_server_error("transfer failed")}
     end
   end
 

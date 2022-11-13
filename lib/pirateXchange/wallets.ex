@@ -14,38 +14,33 @@ defmodule PirateXchange.Wallets do
     end
   end
 
-  #TODO add test
   @spec all(map) :: [Wallet.t]
   def all(params \\ %{}), do: Actions.all(Wallet, params)
 
-  #TODO add test
   @spec find(map) :: {:ok, Wallet.t}
   def find(params \\ %{}), do: Actions.find(Wallet, params)
 
-  @spec find_user_wallet(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Wallet.t}
-                                                                           | {:error, :wallet_not_found}
+  @spec find_user_wallet(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Wallet.t} | ErrorMessage.t
   def find_user_wallet(params = %{user_id: _user_id, currency: _currency}) do
     case Actions.find(Wallet, params) do
       {:ok, res} -> {:ok, res}
-      {:error, _res} -> {:error, :wallet_not_found}
+      {:error, _res} -> ErrorMessage.not_found("wallet not found")
     end
   end
 
-  @spec find_user_wallets(%{user_id: pos_integer}) :: {:ok, [Wallet.t]}
-                                                      | {:error, :wallets_not_found}
-                                                      | {:error, :user_not_found}
+  @spec find_user_wallets(%{user_id: pos_integer}) :: {:ok, [Wallet.t]} | ErrorMessage.t
   def find_user_wallets(%{user_id: user_id}) do
     case Actions.find(User, id: user_id, preload: :wallets) do
-      {:ok, %User{wallets: []}}                 -> {:error, :wallets_not_found}
+      {:ok, %User{wallets: []}}                 -> ErrorMessage.not_found("wallets not found")
       {:ok, %User{wallets: wallets}}            -> {:ok, wallets}
-      {:error, %ErrorMessage{code: :not_found}} -> {:error, :user_not_found}
+      {:error, %ErrorMessage{code: :not_found}} -> ErrorMessage.not_found("user not found")
     end
   end
 
   defp format_errors(changeset) do
     case errors(changeset) do
-      %{currency: ["is invalid"]} -> {:error, :currency_not_allowed}
-      %{unique_user_wallet: ["has already been taken"]} -> {:error, :wallet_exists}
+      %{currency: ["is invalid"]} -> ErrorMessage.not_found("currency not allowed")
+      %{unique_user_wallet: ["has already been taken"]} -> ErrorMessage.internal_server_error("wallet exists")
     end
   end
 

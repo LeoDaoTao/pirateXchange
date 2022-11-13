@@ -19,7 +19,7 @@ defmodule PirateXchange.WalletsTest do
     end
 
     test "should not create a wallet with invalid currency & return {:error, :currency_not_allowed}", ctx do
-      assert {:error, :currency_not_allowed} =
+      assert %ErrorMessage{code: :not_found, message: "currency not allowed"}
         Wallets.create_wallet(%{user_id: ctx.user1.id, currency: :ARR, integer_amount: 1})
     end
 
@@ -28,7 +28,7 @@ defmodule PirateXchange.WalletsTest do
       assert {:ok, %Wallet{user_id: ^user_id, currency: :USD}} =
         Wallets.create_wallet(%{user_id: ctx.user1.id, currency: :USD, integer_amount: 1})
 
-      assert {:error, :wallet_exists} =
+      assert %ErrorMessage{code: :internal_server_error, message: "wallet exists"} =
         Wallets.create_wallet(%{user_id: ctx.user1.id, currency: :USD, integer_amount: 1})
     end
   end
@@ -53,7 +53,7 @@ defmodule PirateXchange.WalletsTest do
     end
 
     test "should return {:error, :wallet_not_found} for users with no wallets", ctx do
-      assert {:error, :wallet_not_found} =
+      assert %ErrorMessage{code: :not_found, message: "wallet not found"} =
         Wallets.find_user_wallet(%{user_id: ctx.user_no_wallet.id, currency: :USD})
     end
   end
@@ -68,7 +68,7 @@ defmodule PirateXchange.WalletsTest do
     end
 
     test "shoud return {:error, :wallets_not_found} for user with no wallets", ctx do
-      assert {:error, :wallets_not_found} =
+      assert %ErrorMessage{code: :not_found, message: "wallets not found"} =
         Wallets.find_user_wallets(%{user_id: ctx.user_no_wallet.id})
     end
   end

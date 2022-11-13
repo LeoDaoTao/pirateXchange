@@ -108,11 +108,11 @@ defmodule PirateXchange.AccountsTest do
 
       assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:USD, :PLN)
 
-      assert {:error, %ErrorMessage{code: :internal_server_error, message: "insufficient balance"}}
-        === Accounts.transfer(transfer)
+      assert {:error, %ErrorMessage{code: :internal_server_error, message: "insufficient balance"}} ===
+        Accounts.transfer(transfer)
     end
 
-    test "should return {:error, :wallet_from_not_found} if from wallet does not exist", ctx do
+    test "should return 'wallet from not found' if from wallet does not exist", ctx do
       transfer = %Transfer{
         from_user_id: ctx.user_no_wallet.id,
         from_currency: :USD,
@@ -121,11 +121,11 @@ defmodule PirateXchange.AccountsTest do
         to_currency: :PLN
       }
 
-      assert{:error, %ErrorMessage{code: :not_found, message: "wallet from not found"}}
-        === Accounts.transfer(transfer)
+      assert {:error, %ErrorMessage{code: :not_found, message: "wallet from not found"}} ===
+        Accounts.transfer(transfer)
     end
 
-    test "should return {:error, :wallet_to_not_found} if to wallet does not exist", ctx do
+    test "should return 'wallet to not found'if to wallet does not exist", ctx do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
@@ -134,8 +134,8 @@ defmodule PirateXchange.AccountsTest do
         to_currency: :PLN
       }
 
-      assert{:error, %ErrorMessage{code: :not_found, message: "wallet to not found"}}
-        === Accounts.transfer(transfer)
+      assert {:error, %ErrorMessage{code: :not_found, message: "wallet to not found"}} ===
+        Accounts.transfer(transfer)
     end
 
     test "should return {:error, :fx_rate_not_available} if fx rate is not available", ctx do
@@ -149,8 +149,8 @@ defmodule PirateXchange.AccountsTest do
 
       assert :ok = FxRateCache.put_fx_rate(@bad_fx_rate)
 
-      assert{:error, %ErrorMessage{code: :internal_server_error, message: "fx rate not available"}}
-        === Accounts.transfer(transfer)
+      assert {:error, %ErrorMessage{code: :internal_server_error, message: "fx rate not available"}} ===
+        Accounts.transfer(transfer)
     end
   end
 end

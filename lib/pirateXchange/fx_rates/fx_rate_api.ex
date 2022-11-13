@@ -1,7 +1,7 @@
 defmodule PirateXchange.FxRates.FxRateApi do
   @fx_api_url Application.get_env(:pirateXchange, :fx_api_url)
 
-  @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | {:error, :atom}
+  @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | ErrorMessage.t
   def get_rate(from_currency, to_currency, url \\ @fx_api_url)
 
   def get_rate(from_currency, to_currency, _url) when from_currency === to_currency do
@@ -25,20 +25,25 @@ defmodule PirateXchange.FxRates.FxRateApi do
       ])
   end
 
-  @spec handle_response(any) :: {:ok, String.t} | {:error, :atom}
+  @spec handle_response(any) :: {:ok, String.t} | {:error, ErrorMessage.t}
   defp handle_response(res) do
     case res do
-      {:ok, %{status_code: 200, body: body}} -> maybe_ok_response(body)
-      {:error, %{reason: reason}} -> {:error, reason}
-      _error -> {:error, :unknown_error}
+      {:ok, %{status_code: 200, body: body}} ->
+        maybe_ok_response(body)
+
+      {:error, %{reason: :econnrefused}} ->
+        {:error, ErrorMessage.gateway_timeout("fx rate server timeout")}
     end
   end
 
-  @spec maybe_ok_response(String.t) :: {:ok, String.t} | {:error, :atom}
+  @spec maybe_ok_response(String.t) :: {:ok, String.t} | {:error, ErrorMessage.t}
   defp maybe_ok_response(body) do
     case Jason.decode(body) do
-      {:ok, %{"Realtime Currency Exchange Rate" => data}} -> {:ok, format_response(data)}
-      _error -> {:error, :json_decoding_error}
+      {:ok, %{"Realtime Currency Exchange Rate" => data}} ->
+        {:ok, format_response(data)}
+
+      _error ->
+        {:error, ErrorMessage.internal_server_error("json decoding error")}
     end
   end
 

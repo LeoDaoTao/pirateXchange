@@ -13,7 +13,7 @@ defmodule PirateXchange.FxRates.FxRate do
     rate: String.t
   }
 
-  @spec get_rate(atom, atom, String.t ) :: {:ok, t} | {:error, atom}
+  @spec get_rate(atom, atom, String.t ) :: {:ok, t} | {:error, ErrorMessage.t}
   def get_rate(from_currency, to_currency, url \\ @fx_api_url) do
     case FxRateApi.get_rate(from_currency, to_currency, url) do
       {:ok, res} ->
@@ -23,7 +23,12 @@ defmodule PirateXchange.FxRates.FxRate do
           rate: res
           }
         }
-      {:error, res} -> {:error, res}
+
+      {:error, %ErrorMessage{code: :gateway_timeout, message: "fx rate server timeout"} = error} ->
+        {:error, error}
+
+      {:error, %ErrorMessage{code: :internal_server_error, message: "json decoding error"} = error} ->
+        {:error, error}
     end
   end
 end
