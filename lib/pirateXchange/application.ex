@@ -15,14 +15,11 @@ defmodule PirateXchange.Application do
   @impl true
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
       PirateXchange.Repo,
-      # Start the Telemetry supervisor
       PirateXchangeWeb.Telemetry,
-      # Start the PubSub system
       {Phoenix.PubSub, name: PirateXchange.PubSub},
-      # Start the Endpoint (http/https)
       PirateXchangeWeb.Endpoint,
+      {Absinthe.Subscription, [PirateXchangeWeb.Endpoint]},
       {ConCache,
          [
            name: :fx_rate_cache,

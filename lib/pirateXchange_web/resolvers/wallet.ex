@@ -1,6 +1,8 @@
 defmodule PirateXchangeWeb.Resolvers.Wallet do
+  alias PirateXchange.Accounts
   alias PirateXchange.Wallets
   alias PirateXchange.Wallets.Transfer
+  alias PirateXchangeWeb.Publications.Publish
 
   @spec find(map, Absinthe.Resolution.t) :: {:ok, Wallet.t} | {:error, String.t}
   def find(params, _resolution), do: Wallets.find(params)
@@ -26,6 +28,14 @@ defmodule PirateXchangeWeb.Resolvers.Wallet do
       to_currency: params.to_currency
     }
 
-    Wallets.transfer(transfer_data)
+    with {:ok, data} <- Wallets.transfer(transfer_data) do
+      Publish.user_total_worth(%{user_id: data.from_user_id, currency: data.from_currency})
+      Publish.user_total_worth(%{user_id: data.to_user_id, currency: data.to_currency})
+
+      {:ok, data}
+    else
+      {:error, error} ->
+        {:error, error}
+    end
   end
 end

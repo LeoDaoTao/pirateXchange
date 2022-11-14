@@ -14,6 +14,7 @@ defmodule PirateXchangeWeb.Router do
     if Mix.env() === :dev do
       forward "/graphiql", Absinthe.Plug.GraphiQL,
         schema: PirateXchangeWeb.Schema,
+        socket: PirateXchangeWeb.UserSocket,
         interface: :playground
     end
   end
