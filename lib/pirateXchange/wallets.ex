@@ -22,7 +22,7 @@ defmodule PirateXchange.Wallets do
   def find(params \\ %{}), do: Actions.find(Wallet, params)
 
   @spec find_user_wallet(%{user_id: pos_integer, currency: Currency.t}) :: {:ok, Wallet.t} | ErrorMessage.t
-  def find_user_wallet(params = %{user_id: _user_id, currency: _currency}) do
+  def find_user_wallet(%{user_id: _user_id, currency: _currency} = params) do
     case Actions.find(Wallet, params) do
       {:ok, res} -> {:ok, res}
       {:error, _res} -> ErrorMessage.not_found("wallet not found")

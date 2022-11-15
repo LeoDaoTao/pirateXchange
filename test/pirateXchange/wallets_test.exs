@@ -86,7 +86,7 @@ defmodule PirateXchange.WalletsTest do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
-        integer_amount: 10000,
+        integer_amount: 10_000,
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }
@@ -108,7 +108,7 @@ defmodule PirateXchange.WalletsTest do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
-        integer_amount: 20000,
+        integer_amount: 20_000,
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }
@@ -125,7 +125,7 @@ defmodule PirateXchange.WalletsTest do
       transfer = %Transfer{
         from_user_id: ctx.user_no_wallet.id,
         from_currency: :USD,
-        integer_amount: 10000,
+        integer_amount: 10_000,
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }
@@ -138,7 +138,7 @@ defmodule PirateXchange.WalletsTest do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
-        integer_amount: 10000,
+        integer_amount: 10_000,
         to_user_id: ctx.user_no_wallet.id,
         to_currency: :PLN
       }
@@ -151,7 +151,7 @@ defmodule PirateXchange.WalletsTest do
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
-        integer_amount: 10000,
+        integer_amount: 10_000,
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }

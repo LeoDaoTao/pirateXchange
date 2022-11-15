@@ -21,7 +21,7 @@ defmodule PirateXchange.Accounts.UserInfoTest do
       assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:PLN, :USD)
       assert {:ok, "1"}    === FxRateCache.get_fx_rate(:USD, :USD)
 
-      assert {:ok, %{user_id: ctx.user1.id, currency: :USD, integer_amount: 2500000}} ===
+      assert {:ok, %{user_id: ctx.user1.id, currency: :USD, integer_amount: 2_500_000}} ===
         Accounts.user_total_worth(%{user_id: ctx.user1.id, currency: :USD})
     end
 

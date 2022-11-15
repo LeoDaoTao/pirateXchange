@@ -2,11 +2,7 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.FxRateChangeTest do
   use PirateXchangeWeb.SubscriptionCase
 
   alias PirateXchange.FxRates.FxRate
-  alias PirateXchange.FxRates.FxRateCache
   alias PirateXchangeWeb.Publications.Publish
-
-  import PirateXchange.UserFixtures,
-    only: [users: 1, wallets: 1]
 
   @fx_rate %FxRate{from_currency: :USD, to_currency: :PLN, rate: "1.50"}
 
@@ -31,8 +27,6 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.FxRateChangeTest do
       assert :ok = Publish.fx_rate_change(@fx_rate)
 
       assert_push "subscription:data", reply
-
-      IO.inspect reply
 
       assert %{
         subscriptionId: ^subscription_id,

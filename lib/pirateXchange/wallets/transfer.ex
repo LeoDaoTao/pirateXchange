@@ -29,7 +29,7 @@ defmodule PirateXchange.Wallets.Transfer do
   }
 
   @spec send(t) :: {:ok, :transfer_successful} | {:error, ErrorMessage.t}
-  def send(transfer = %__MODULE__{}) do
+  def send(%__MODULE__{} = transfer) do
     res = Ecto.Multi.new()
     |> Ecto.Multi.put(:transfer, transfer)
     |> Ecto.Multi.one(:from_wallet, &retrieve_from_wallet/1)

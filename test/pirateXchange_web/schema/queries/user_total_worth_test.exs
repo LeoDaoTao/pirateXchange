@@ -33,7 +33,7 @@ defmodule PirateXchangeWeb.Schema.Queries.UserTotalWorth do
         }
       )
 
-      assert data["userTotalWorth"]["integerAmount"] === 2500000
+      assert data["userTotalWorth"]["integerAmount"] === 2_500_000
     end
   end
 end

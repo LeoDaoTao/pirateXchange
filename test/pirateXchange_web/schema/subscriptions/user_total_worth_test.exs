@@ -1,14 +1,8 @@
 defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthTest do
   use PirateXchangeWeb.SubscriptionCase
 
-  alias PirateXchange.FxRates.FxRate
-  alias PirateXchange.FxRates.FxRateCache
-  alias PirateXchangeWeb.Schema
-
   import PirateXchange.UserFixtures,
     only: [users: 1, wallets: 1]
-
-  @fx_rate %FxRate{from_currency: :USD, to_currency: :PLN, rate: "1.50"}
 
   @transfer_doc """
     mutation Transfer(
@@ -58,7 +52,7 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthTest do
       ref = push_doc(ctx.socket, @transfer_doc, variables: %{
         "fromUserId" => to_string(ctx.user1.id),
         "fromCurrency" => "USD",
-        "integerAmount" => 10000,
+        "integerAmount" => 10_000,
         "toUserId" => to_string(ctx.user2.id),
         "toCurrency" => "PLN"
         })
@@ -70,7 +64,7 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthTest do
                  "transfer" => %{
                    "fromUserId" => to_string(ctx.user1.id),
                    "fromCurrency" => "USD",
-                   "integerAmount" => 10000,
+                   "integerAmount" => 10_000,
                    "toUserId" => to_string(ctx.user2.id),
                    "toCurrency" => "PLN"
                  }

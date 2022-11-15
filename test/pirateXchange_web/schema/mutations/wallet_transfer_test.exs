@@ -47,7 +47,7 @@ defmodule PirateXchangeWeb.Schema.Mutations.WalletTransferTest do
         variables: %{
           "fromUserId" => Integer.to_string(ctx.user1.id),
           "fromCurrency" => "USD",
-          "integerAmount" => 10000,
+          "integerAmount" => 10_000,
           "toUserId" => Integer.to_string(ctx.user2.id),
           "toCurrency" => "PLN"
         })
@@ -64,7 +64,7 @@ defmodule PirateXchangeWeb.Schema.Mutations.WalletTransferTest do
         variables: %{
           "fromUserId" => Integer.to_string(ctx.user1.id),
           "fromCurrency" => "USD",
-          "integerAmount" => 20000,
+          "integerAmount" => 20_000,
           "toUserId" => Integer.to_string(ctx.user2.id),
           "toCurrency" => "PLN"
         })
@@ -78,7 +78,7 @@ defmodule PirateXchangeWeb.Schema.Mutations.WalletTransferTest do
         variables: %{
           "fromUserId" => Integer.to_string(ctx.user_no_wallet.id),
           "fromCurrency" => "USD",
-          "integerAmount" => 10000,
+          "integerAmount" => 10_000,
           "toUserId" => Integer.to_string(ctx.user2.id),
           "toCurrency" => "PLN"
         })
@@ -92,7 +92,7 @@ defmodule PirateXchangeWeb.Schema.Mutations.WalletTransferTest do
         variables: %{
           "fromUserId" => Integer.to_string(ctx.user1.id),
           "fromCurrency" => "USD",
-          "integerAmount" => 10000,
+          "integerAmount" => 10_000,
           "toUserId" => Integer.to_string(ctx.user_no_wallet.id),
           "toCurrency" => "PLN"
         })
