@@ -24,10 +24,16 @@ defmodule PirateXchange.FxRates.FxRate do
           }
         }
 
-      {:error, %ErrorMessage{code: :gateway_timeout, message: "fx rate server timeout"} = error} ->
+      {:error, %ErrorMessage{
+        code: :gateway_timeout,
+        message: "fx rate server timeout"}
+          = error} ->
         {:error, error}
 
-      {:error, %ErrorMessage{code: :internal_server_error, message: "json decoding error"} = error} ->
+      {:error, %ErrorMessage{
+        code: :internal_server_error,
+        message: "json decoding error"}
+          = error} ->
         {:error, error}
     end
   end

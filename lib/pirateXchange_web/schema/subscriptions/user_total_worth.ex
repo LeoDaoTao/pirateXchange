@@ -1,4 +1,4 @@
-defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthChange do
+defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorth do
   use Absinthe.Schema.Notation
 
   object :total_worth_subscriptions do

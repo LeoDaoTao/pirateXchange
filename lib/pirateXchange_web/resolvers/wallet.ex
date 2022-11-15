@@ -34,8 +34,7 @@ defmodule PirateXchangeWeb.Resolvers.Wallet do
 
       {:ok, data}
     else
-      {:error, error} ->
-        {:error, error}
+      {:error, error} -> {:error, error}
     end
   end
 end

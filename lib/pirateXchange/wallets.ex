@@ -11,7 +11,7 @@ defmodule PirateXchange.Wallets do
 
     case(res) do
       {:ok, res} -> {:ok, res}
-      {:error, res} -> format_errors(res)
+      {:error, error} -> format_errors(error)
     end
   end
 

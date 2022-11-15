@@ -33,6 +33,9 @@ defmodule PirateXchange.FxRates.FxRateApi do
 
       {:error, %{reason: :econnrefused}} ->
         {:error, ErrorMessage.gateway_timeout("fx rate server timeout")}
+
+      {:error, %{reason: :timeout}} ->
+        {:error, ErrorMessage.gateway_timeout("fx rate server timeout")}
     end
   end
 

@@ -3,6 +3,7 @@ defmodule PirateXchangeWeb.Schema do
   alias PirateXchangeWeb.Middlewares.Errors
 
   import_types PirateXchangeWeb.Types.Currency
+  import_types PirateXchangeWeb.Types.FxRate
   import_types PirateXchangeWeb.Types.Transfer
   import_types PirateXchangeWeb.Types.User
   import_types PirateXchangeWeb.Types.UserTotalWorth
@@ -12,7 +13,8 @@ defmodule PirateXchangeWeb.Schema do
   import_types PirateXchangeWeb.Schema.Queries.UserTotalWorth
   import_types PirateXchangeWeb.Schema.Mutations.User
   import_types PirateXchangeWeb.Schema.Mutations.Wallet
-  import_types PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthChange
+  import_types PirateXchangeWeb.Schema.Subscriptions.FxRateChange
+  import_types PirateXchangeWeb.Schema.Subscriptions.UserTotalWorth
 
   query do
     import_fields :user_queries
@@ -27,6 +29,7 @@ defmodule PirateXchangeWeb.Schema do
 
   subscription do
     import_fields :total_worth_subscriptions
+    import_fields :fx_rate_subscriptions
   end
 
   def context(ctx) do
