@@ -6,9 +6,9 @@ defmodule PirateXchange.Application do
   alias PirateXchange.FxRates.FxRateTask
 
   # ConCache Settigns
-  @global_ttl Application.get_env(:pirateXchange, :global_ttl)
-  @ttl_check_interval Application.get_env(:pirateXchange, :ttl_check_interval)
-  @available_currencies Application.get_env(:pirateXchange, :available_currencies)
+  @global_ttl PirateXchange.Config.global_ttl
+  @ttl_check_interval PirateXchange.Config.ttl_check_interval
+  @available_currencies PirateXchange.Config.available_currencies
 
   use Application
 

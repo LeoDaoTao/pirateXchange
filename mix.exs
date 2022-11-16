@@ -55,6 +55,7 @@ defmodule PirateXchange.MixProject do
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:bypass, "~> 2.1", only: :test},
       {:mix_test_watch, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:blitz_credo_checks, "~> 0.1.5", only: [:dev], runtime: false}
     ]
   end
 

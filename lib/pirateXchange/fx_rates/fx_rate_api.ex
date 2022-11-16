@@ -1,5 +1,5 @@
 defmodule PirateXchange.FxRates.FxRateApi do
-  @fx_api_url Application.get_env(:pirateXchange, :fx_api_url)
+  @fx_api_url PirateXchange.Config.fx_api_url
 
   @spec get_rate(:atom, :atom, String.t) :: {:ok, String.t} | ErrorMessage.t
   def get_rate(from_currency, to_currency, url \\ @fx_api_url)
@@ -13,7 +13,6 @@ defmodule PirateXchange.FxRates.FxRateApi do
     |> fetch_from_external_api(to_currency, url)
     |> handle_response()
   end
-
 
   @spec fetch_from_external_api(:atom, :atom, String.t) :: {:ok, HTTPoison.Response.t} | {:error, HTTPoison.Error.t}
   defp fetch_from_external_api(from_currency, to_currency, url) do
@@ -30,6 +29,9 @@ defmodule PirateXchange.FxRates.FxRateApi do
     case res do
       {:ok, %{status_code: 200, body: body}} ->
         maybe_ok_response(body)
+
+      {:ok, %{status_code: 400}} ->
+        {:error, ErrorMessage.gateway_timeout("fx rate server timeout")}
 
       {:error, %{reason: :econnrefused}} ->
         {:error, ErrorMessage.gateway_timeout("fx rate server timeout")}

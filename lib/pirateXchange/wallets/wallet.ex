@@ -3,6 +3,8 @@ defmodule PirateXchange.Wallets.Wallet do
   import Ecto.Changeset
   import Ecto.Query
 
+  @available_currencies PirateXchange.Config.available_currencies
+
   @typep currency :: PirateXchange.Currencies.Currency.t
   @type t :: %__MODULE__{
     id: pos_integer,
@@ -10,8 +12,6 @@ defmodule PirateXchange.Wallets.Wallet do
     integer_amount: integer,
     user_id: pos_integer
   }
-
-  @available_currencies Application.get_env(:pirateXchange, :available_currencies)
 
   schema "wallets" do
     belongs_to :user, PirateXchange.Accounts.User

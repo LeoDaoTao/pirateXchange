@@ -21,7 +21,7 @@ defmodule PirateXchange.FxRates.FxRateTest do
         Plug.Conn.resp(conn, 200, @ok_res)
       end)
 
-      assert {:ok, %FxRate{from_currency: :USD, to_currency: :PLN, rate: "2.23"}} ==
+      assert {:ok, %FxRate{from_currency: :USD, to_currency: :PLN, rate: "2.23"}} ===
         FxRate.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
     end
 

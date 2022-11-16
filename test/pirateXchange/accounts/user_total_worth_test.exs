@@ -41,6 +41,4 @@ defmodule PirateXchange.Accounts.UserInfoTest do
         Accounts.user_total_worth(%{user_id: ctx.user1.id, currency: :ARR})
     end
   end
-
-
 end

@@ -1,5 +1,4 @@
 defmodule PirateXchangeWeb.Resolvers.Wallet do
-  alias PirateXchange.Accounts
   alias PirateXchange.Wallets
   alias PirateXchange.Wallets.Transfer
   alias PirateXchangeWeb.Publications.Publish
@@ -28,12 +27,12 @@ defmodule PirateXchangeWeb.Resolvers.Wallet do
       to_currency: params.to_currency
     }
 
-    with {:ok, data} <- Wallets.transfer(transfer_data) do
-      Publish.user_total_worth(%{user_id: data.from_user_id, currency: data.from_currency})
-      Publish.user_total_worth(%{user_id: data.to_user_id, currency: data.to_currency})
+    case Wallets.transfer(transfer_data) do
+      {:ok, data} ->
+        Publish.user_total_worth(%{user_id: data.from_user_id, currency: data.from_currency})
+        Publish.user_total_worth(%{user_id: data.to_user_id, currency: data.to_currency})
+        {:ok, data}
 
-      {:ok, data}
-    else
       {:error, error} -> {:error, error}
     end
   end

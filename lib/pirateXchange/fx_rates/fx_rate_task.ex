@@ -7,7 +7,7 @@ defmodule PirateXchange.FxRates.FxRateTask do
   alias PirateXchangeWeb.Publications.Publish
 
   @cache_name :fx_rate_cache
-  @fx_api_url Application.get_env(:pirateXchange, :fx_api_url)
+  @fx_api_url PirateXchange.Config.fx_api_url
 
   @typep currency :: PirateXchange.Currencies.Currency.t
 

@@ -4,7 +4,7 @@ defmodule PirateXchange.FxRates.FxRateCache do
 
   @typep currency :: Currency.t
 
-  @cache_name Application.get_env(:pirateXchange, :fx_rate_cache)
+  @cache_name PirateXchange.Config.fx_rate_cache
 
   @spec put_fx_rate(FxRate.t) :: :ok
   @spec put_fx_rate(FxRate.t, atom) :: :ok

@@ -18,7 +18,6 @@ defmodule PirateXchange.Accounts.User do
     has_many :wallets, Wallet
   end
 
-
   @spec changeset(t, map) :: Ecto.Changeset.t
   def changeset(user, params \\ %{}) do
     user

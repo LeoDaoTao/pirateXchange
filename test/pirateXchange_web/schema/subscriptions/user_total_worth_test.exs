@@ -48,7 +48,6 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthTest do
 
       assert_reply ref, :ok, %{subscriptionId: subscription_id}
 
-
       ref = push_doc(ctx.socket, @transfer_doc, variables: %{
         "fromUserId" => to_string(ctx.user1.id),
         "fromCurrency" => "USD",
@@ -70,7 +69,6 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.UserTotalWorthTest do
                  }
                }
              } === reply
-
 
       assert_push "subscription:data", reply
 

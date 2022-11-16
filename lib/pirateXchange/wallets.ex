@@ -5,7 +5,13 @@ defmodule PirateXchange.Wallets do
   alias PirateXchange.Wallets.Wallet
   alias PirateXchange.Wallets.Transfer
 
-  @spec create_wallet(%{user_id: pos_integer, curreny: Currency.t, integer_amount: integer}) :: {:ok, Wallet.t} | {:error, String.t}
+  @spec create_wallet(
+    %{
+      user_id: pos_integer,
+      currency: Currency.t,
+      integer_amount: integer
+    }) :: {:ok, Wallet.t}
+          | {:error, String.t}
   def create_wallet(%{user_id: user_id, currency: currency, integer_amount: integer_amount}) do
     res = Actions.create(Wallet, %{user_id: user_id, currency: currency, integer_amount: integer_amount})
 

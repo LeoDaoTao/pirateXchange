@@ -7,7 +7,6 @@ defmodule PirateXchange.AccountsTest do
   import PirateXchange.UserFixtures,
     only: [users: 1, user_params: 1]
 
-
   describe "create_user/1" do
     setup :user_params
 

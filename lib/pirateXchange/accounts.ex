@@ -1,7 +1,6 @@
 defmodule PirateXchange.Accounts do
   alias PirateXchange.Accounts.User
   alias PirateXchange.Accounts.UserInfo
-  alias PirateXchange.Accounts.Transfer
   alias PirateXchange.Currencies.Currency
   alias EctoShorts.Actions
 
@@ -17,7 +16,7 @@ defmodule PirateXchange.Accounts do
   def delete_user(user_id), do: Actions.delete(User, user_id)
 
   @spec all_users() :: [User.t]
-  def all_users(), do: Actions.all(User)
+  def all_users, do: Actions.all(User)
 
   @spec find_user(map) :: {:ok, User.t} | {:error, Ecto.Changeset.t}
   def find_user(params \\ %{}), do: Actions.find(User, params)

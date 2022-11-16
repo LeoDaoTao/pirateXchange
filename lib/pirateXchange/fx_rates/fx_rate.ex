@@ -2,7 +2,7 @@ defmodule PirateXchange.FxRates.FxRate do
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.FxRates.FxRateApi
 
-  @fx_api_url Application.get_env(:pirateXchange, :fx_api_url)
+  @fx_api_url PirateXchange.Config.fx_api_url
 
   @enforce_keys [:from_currency, :to_currency, :rate]
   defstruct [:from_currency, :to_currency, :rate]
