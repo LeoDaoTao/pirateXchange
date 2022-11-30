@@ -1,4 +1,4 @@
-defmodule PirateXchangeWeb.Publications.Publish do
+defmodule PirateXchange.SubscriptionPublisher do
   alias PirateXchange.Accounts
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.FxRates.FxRate

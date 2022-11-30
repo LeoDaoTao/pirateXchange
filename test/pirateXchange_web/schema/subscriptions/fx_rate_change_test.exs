@@ -2,7 +2,7 @@ defmodule PirateXchangeWeb.Schema.Subscriptions.FxRateChangeTest do
   use PirateXchangeWeb.SubscriptionCase
 
   alias PirateXchange.FxRates.FxRate
-  alias PirateXchangeWeb.Publications.Publish
+  alias PirateXchange.SubscriptionPublisher, as: Publish
 
   @fx_rate %FxRate{from_currency: :USD, to_currency: :PLN, rate: "1.50"}
 

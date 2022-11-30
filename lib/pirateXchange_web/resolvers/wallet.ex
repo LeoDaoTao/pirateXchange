@@ -1,7 +1,7 @@
 defmodule PirateXchangeWeb.Resolvers.Wallet do
   alias PirateXchange.Transactions.Transfer
   alias PirateXchange.Wallets
-  alias PirateXchangeWeb.Publications.Publish
+  alias PirateXchange.SubscriptionPublisher, as: Publish
 
   @spec find(map, Absinthe.Resolution.t) :: {:ok, Wallet.t} | {:error, String.t}
   def find(params, _resolution), do: Wallets.find(params)

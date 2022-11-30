@@ -3,8 +3,9 @@ defmodule PirateXchange.FxRates.FxRateTask do
   require Logger
 
   alias PirateXchange.FxRates.FxRate
+  alias PirateXchange.FxRates.FxRateApi
   alias PirateXchange.FxRates.FxRateCache
-  alias PirateXchangeWeb.Publications.Publish
+  alias PirateXchange.SubscriptionPublisher, as: Publish
 
   @cache_name :fx_rate_cache
   @fx_api_url PirateXchange.Config.fx_api_url
@@ -25,7 +26,7 @@ defmodule PirateXchange.FxRates.FxRateTask do
   end
 
   def run(from_currency, to_currency, cache_name, url \\ @fx_api_url) do
-    case FxRate.get_rate(from_currency, to_currency, url) do
+    case FxRateApi.get_rate(from_currency, to_currency, url) do
       {:ok, rate = %FxRate{}} ->
         FxRateCache.put_fx_rate(rate, cache_name)
         Publish.fx_rate_change(rate)
