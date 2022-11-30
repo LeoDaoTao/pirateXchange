@@ -1,6 +1,6 @@
 defmodule PirateXchangeWeb.Resolvers.Wallet do
+  alias PirateXchange.Transactions.Transfer
   alias PirateXchange.Wallets
-  alias PirateXchange.Wallets.Transfer
   alias PirateXchangeWeb.Publications.Publish
 
   @spec find(map, Absinthe.Resolution.t) :: {:ok, Wallet.t} | {:error, String.t}

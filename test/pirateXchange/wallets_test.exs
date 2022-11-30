@@ -4,8 +4,8 @@ defmodule PirateXchange.WalletsTest do
   import PirateXchange.UserFixtures,
     only: [users: 1, wallets: 1, user_no_wallet: 1]
 
+  alias PirateXchange.Transactions.Transfer
   alias PirateXchange.Wallets
-  alias PirateXchange.Wallets.Transfer
   alias PirateXchange.Wallets.Wallet
   alias PirateXchange.FxRates.FxRate
   alias PirateXchange.FxRates.FxRateCache
@@ -58,8 +58,8 @@ defmodule PirateXchange.WalletsTest do
         Wallets.find_user_wallet(%{user_id: user_id, currency: :USD})
     end
 
-    test "should return {:error, :wallet_not_found} for users with no wallets", ctx do
-      assert %ErrorMessage{code: :not_found, message: "wallet not found"} =
+    test "should return {:error, %ErrorMessage} for users with no wallets", ctx do
+      assert {:error, %ErrorMessage{code: :not_found, message: "wallet not found"}} =
         Wallets.find_user_wallet(%{user_id: ctx.user_no_wallet.id, currency: :USD})
     end
   end
@@ -74,7 +74,7 @@ defmodule PirateXchange.WalletsTest do
     end
 
     test "shoud return {:error, :wallets_not_found} for user with no wallets", ctx do
-      assert %ErrorMessage{code: :not_found, message: "wallets not found"} =
+      assert {:error, %ErrorMessage{code: :not_found, message: "wallets not found"}} =
         Wallets.find_user_wallets(%{user_id: ctx.user_no_wallet.id})
     end
   end

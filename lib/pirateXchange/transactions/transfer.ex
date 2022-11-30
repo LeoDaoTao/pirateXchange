@@ -1,4 +1,5 @@
-defmodule PirateXchange.Wallets.Transfer do
+defmodule PirateXchange.Transactions.Transfer do
+  alias ErrorMessage
   alias PirateXchange.Currencies.Currency
   alias PirateXchange.FxRates
   alias PirateXchange.Repo
@@ -34,7 +35,8 @@ defmodule PirateXchange.Wallets.Transfer do
     |> Ecto.Multi.put(:transfer, transfer)
     |> Ecto.Multi.one(:from_wallet, &retrieve_from_wallet/1)
     |> Ecto.Multi.one(:to_wallet, &retrieve_to_wallet/1)
-    |> Ecto.Multi.run(:verify_wallets, &verify_wallets/2)
+    |> Ecto.Multi.run(:verify_from_wallet, &verify_from_wallet/2)
+    |> Ecto.Multi.run(:verify_to_wallet, &verify_to_wallet/2)
     |> Ecto.Multi.run(:verify_balance, &verify_balance/2)
     |> Ecto.Multi.run(:fx_rate, &get_fx_rate/2)
     |> Ecto.Multi.run(:fx_amount, &fx_amount/2)
@@ -46,23 +48,8 @@ defmodule PirateXchange.Wallets.Transfer do
       {:ok, %{transfer: transfer}}
         -> {:ok, transfer}
 
-      {:error, :verify_wallets, :wallet_from_not_found, _} ->
-        {:error, ErrorMessage.not_found("wallet from not found")}
-
-      {:error, :verify_wallets, :wallet_to_not_found, _} ->
-        {:error, ErrorMessage.not_found("wallet to not found", %{
-          to_user_id: transfer.to_user_id,
-          to_currency: transfer.to_currency
-        })}
-
-      {:error, :verify_balance, :insufficient_balance, _} ->
-        {:error, ErrorMessage.internal_server_error("insufficient balance")}
-
-      {:error, :fx_rate, :fx_rate_not_available, _} ->
-        {:error, ErrorMessage.internal_server_error("fx rate not available")}
-
-      {:error, _} ->
-        {:error, ErrorMessage.internal_server_error("transfer failed")}
+      {:error, _function, error, _} ->
+        {:error, error}
     end
   end
 
@@ -78,27 +65,37 @@ defmodule PirateXchange.Wallets.Transfer do
       |> Wallet.lock_wallet()
   end
 
-  defp verify_wallets(_multi, %{from_wallet: from_wallet, to_wallet: to_wallet}) do
-    with {:wallet_from_valid?, %Wallet{}} <- {:wallet_from_valid?, from_wallet},
-         {:wallet_to_valid?,   %Wallet{}} <- {:wallet_to_valid?, to_wallet} do
-     {:ok, true}
-    else
-      {:wallet_from_valid?, nil}  -> {:error, :wallet_from_not_found}
-      {:wallet_to_valid?,   nil}  -> {:error, :wallet_to_not_found}
-    end
+  defp verify_from_wallet(_multi, %{from_wallet: %Wallet{}}) do
+    {:ok, true}
+  end
+
+  defp verify_from_wallet(_multi, %{from_wallet: _}) do
+    {:error, ErrorMessage.not_found("wallet from not found")}
+  end
+
+  defp verify_to_wallet(_multi, %{to_wallet: %Wallet{}}) do
+    {:ok, true}
+  end
+
+  defp verify_to_wallet(_multi, %{to_wallet: _, transfer: transfer}) do
+    {:error, ErrorMessage.not_found("wallet to not found", %{
+                          to_user_id: transfer.to_user_id,
+                          to_currency: transfer.to_currency
+                       })
+    }
   end
 
   defp verify_balance(_multi, %{from_wallet: balance, transfer: transfer}) do
     case balance.integer_amount >= transfer.integer_amount do
       true -> {:ok, true}
-         _ -> {:error, :insufficient_balance}
+         _ -> {:error, ErrorMessage.internal_server_error("insufficient balance")}
     end
   end
 
   defp get_fx_rate(_multi, %{transfer: transfer}) do
     case FxRates.get(transfer.from_currency, transfer.to_currency) do
       {:ok, rate} -> {:ok, String.to_float(rate)}
-      _error      -> {:error, :fx_rate_not_available}
+      _error      -> {:error, ErrorMessage.internal_server_error("fx rate not available")}
     end
   end
 
