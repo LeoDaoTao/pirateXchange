@@ -1,26 +1,19 @@
 defmodule PirateXchange.Accounts.UserInfoTest do
   use PirateXchange.DataCase
 
-  import PirateXchange.UserFixtures, only: [users: 1, user_no_wallet: 1, user_deleted: 1, wallets: 1]
+  import PirateXchange.UserFixtures,
+    only: [users: 1, user_no_wallet: 1, user_deleted: 1, wallets: 1]
+
+  import PirateXchange.FxRateFixtures,
+    only: [fx_rates: 1]
 
   alias PirateXchange.Accounts
   alias PirateXchange.Currencies.Money
-  alias PirateXchange.FxRates.FxRate
-  alias PirateXchange.FxRates.FxRateCache
-
-  @fx_rate_pln %FxRate{from_currency: :PLN, to_currency: :USD, rate: "1.50"}
-  @fx_rate_usd %FxRate{from_currency: :USD, to_currency: :USD, rate: "1"}
 
   describe "total_worth/1" do
-    setup [:users, :user_no_wallet, :user_deleted, :wallets]
+    setup [:users, :user_no_wallet, :user_deleted, :wallets, :fx_rates]
 
     test "should return {:ok, %{user_id:, currency:, integer_amount:}} total worth in target currency", ctx do
-      assert :ok = FxRateCache.put_fx_rate(@fx_rate_pln)
-      assert :ok = FxRateCache.put_fx_rate(@fx_rate_usd)
-
-      assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:PLN, :USD)
-      assert {:ok, "1"}    === FxRateCache.get_fx_rate(:USD, :USD)
-
       assert {:ok, %{user_id: ctx.user1.id, currency: :USD, integer_amount: 2_500_000}} ===
         Accounts.user_total_worth(%{user_id: ctx.user1.id, currency: :USD})
     end

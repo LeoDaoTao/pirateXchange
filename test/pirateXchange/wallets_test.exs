@@ -1,8 +1,11 @@
 defmodule PirateXchange.WalletsTest do
-  use PirateXchange.DataCase
+  use PirateXchange.DataCase, async: false
 
   import PirateXchange.UserFixtures,
     only: [users: 1, wallets: 1, user_no_wallet: 1]
+
+  import PirateXchange.FxRateFixtures,
+    only: [fx_rates: 1]
 
   alias PirateXchange.Transactions.Transfer
   alias PirateXchange.Wallets
@@ -10,7 +13,6 @@ defmodule PirateXchange.WalletsTest do
   alias PirateXchange.FxRates.FxRate
   alias PirateXchange.FxRates.FxRateCache
 
-  @fx_rate %FxRate{from_currency: :USD, to_currency: :PLN, rate: "1.50"}
   @bad_fx_rate %FxRate{from_currency: :USD, to_currency: :PLN, rate: nil}
 
   describe "create_wallet/1" do
@@ -36,15 +38,6 @@ defmodule PirateXchange.WalletsTest do
 
       assert {:error, %ErrorMessage{code: :internal_server_error, message: "wallet exists"}} =
         Wallets.create_wallet(%{user_id: ctx.user1.id, currency: :USD, integer_amount: 1})
-    end
-  end
-
-  describe "all/1" do
-    setup [:users, :wallets]
-
-    test "should return a list of Wallets for given currency" do
-      #IO.inspect wallets = Wallets.all(%{currency: :PLN})
-      #IO.inspect ctx.wallets
     end
   end
 
@@ -80,9 +73,10 @@ defmodule PirateXchange.WalletsTest do
   end
 
   describe "transfer/1" do
-    setup [:users, :user_no_wallet, :wallets]
+    setup [:users, :user_no_wallet, :wallets, :fx_rates]
 
     test "should transfer 100.00 USD from one user to 150.00 PLN to another user", ctx do
+      FxRateCache.put_fx_rate(%FxRate{from_currency: :USD, to_currency: :PLN, rate: "1.50"})
       transfer = %Transfer{
         from_user_id: ctx.user1.id,
         from_currency: :USD,
@@ -90,10 +84,6 @@ defmodule PirateXchange.WalletsTest do
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }
-
-      assert :ok = FxRateCache.put_fx_rate(@fx_rate)
-
-      assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:USD, :PLN)
 
       assert {:ok, %Transfer{}} = Wallets.transfer(transfer)
 
@@ -112,10 +102,6 @@ defmodule PirateXchange.WalletsTest do
         to_user_id: ctx.user2.id,
         to_currency: :PLN
       }
-
-      assert :ok = FxRateCache.put_fx_rate(@fx_rate)
-
-      assert {:ok, "1.50"} === FxRateCache.get_fx_rate(:USD, :PLN)
 
       assert {:error, %ErrorMessage{code: :internal_server_error, message: "insufficient balance"}} ===
         Wallets.transfer(transfer)

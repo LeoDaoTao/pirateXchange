@@ -15,4 +15,7 @@ defmodule PirateXchange.Config do
 
   @spec ttl_check_interval() :: Integer
   def ttl_check_interval, do: Application.get_env(:pirateXchange, :ttl_check_interval)
+
+  @spec fx_rate_refresh_interval() :: Integer
+  def fx_rate_refresh_interval, do: Application.get_env(:pirateXchange, :fx_rate_refresh_interval)
 end

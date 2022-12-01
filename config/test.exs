@@ -15,8 +15,12 @@ config :pirateXchange, PirateXchange.Repo,
 
 # Application Configuration (Test Env)
 config :pirateXchange,
-  global_ttl: 5000,
-  ttl_check_interval: 1000
+  available_currencies: [:USD, :EUR, :PLN, :CAD],
+  fx_api_url: "http://localhost:4001/query",
+  fx_rate_cache: :fx_rate_cache_test,
+  ttl_check_interval: 10_000,
+  fx_rate_refresh_interval: 10_000
+
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.

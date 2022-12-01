@@ -1,13 +1,12 @@
 defmodule PirateXchange.FxRates.FxRateApiTest do
   use ExUnit.Case
-  require Application
 
+  alias PirateXchange.BypassHelper
   alias PirateXchange.FxRates.FxRate
   alias PirateXchange.FxRates.FxRateApi
 
   setup do
-    bypass = Bypass.open()
-    {:ok, bypass: bypass}
+    {:ok, bypass: Bypass.open()}
   end
 
   @ok_res ~s(
@@ -17,26 +16,22 @@ defmodule PirateXchange.FxRates.FxRateApiTest do
   @json_decoding_error_res "Arrgh"
 
   describe "get_rate/2" do
-    test "should return a valid {:ok, %FxRate{}} tuple", %{bypass: bypass} do
-      Bypass.expect(bypass, fn conn ->
-        Plug.Conn.resp(conn, 200, @ok_res)
-      end)
+    test "should return a valid {:ok, %FxRate{}} tuple", ctx do
+      BypassHelper.bypass_expect(@ok_res, ctx.bypass)
 
       assert {:ok, %FxRate{from_currency: :USD, to_currency: :PLN, rate: "2.23"}} ===
-        FxRateApi.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
+        FxRateApi.get_rate(:USD, :PLN, "http://localhost:#{ctx.bypass.port}/query")
     end
 
-    test "should return 'json decoding error' with json error", %{bypass: bypass} do
-      Bypass.expect(bypass, fn conn ->
-        Plug.Conn.resp(conn, 200, @json_decoding_error_res)
-      end)
+    test "should return 'json decoding error' with json error", ctx do
+      BypassHelper.bypass_expect(@json_decoding_error_res, ctx.bypass)
 
       assert {:error, %ErrorMessage{code: :internal_server_error, message: "json decoding error"}} ===
-        FxRateApi.get_rate(:USD, :PLN, "http://localhost:#{bypass.port}/query")
+        FxRateApi.get_rate(:USD, :PLN, "http://localhost:#{ctx.bypass.port}/query")
     end
 
-    test "should return {:ok, %FxRate{..., rate: '1'}} when same currency provided" do
-      assert {:ok, %FxRate{from_currency: :USD, to_currency: :USD, rate: "1"}} ===
+    test "should return {:ok, %FxRate{..., rate: '1.00'}} when same currency provided" do
+      assert {:ok, %FxRate{from_currency: :USD, to_currency: :USD, rate: "1.00"}} ===
         FxRateApi.get_rate(:USD, :USD)
     end
 

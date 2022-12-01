@@ -7,7 +7,7 @@ defmodule PirateXchange.FxRates.FxRateApi do
   def get_rate(from_currency, to_currency, url \\ @fx_api_url)
 
   def get_rate(from_currency, to_currency, _url) when from_currency === to_currency do
-    {:ok, %FxRate{from_currency: from_currency, to_currency: to_currency, rate: "1"}}
+    {:ok, %FxRate{from_currency: from_currency, to_currency: to_currency, rate: "1.00"}}
   end
 
   def get_rate(from_currency, to_currency, url) do

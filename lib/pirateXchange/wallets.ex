@@ -5,7 +5,6 @@ defmodule PirateXchange.Wallets do
   alias PirateXchange.Currencies.Money
   alias PirateXchange.FxRates
   alias PirateXchange.Transactions.Transfer
-  alias PirateXchange.Wallets
   alias PirateXchange.Wallets.Wallet
 
   @spec create_wallet(

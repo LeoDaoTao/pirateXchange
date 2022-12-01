@@ -29,11 +29,6 @@ defmodule PirateXchange.Currencies.Money do
     |> String.to_integer
   end
 
-  @spec add_two_money_amounts(String.t, String.t) :: String.t
-  defp add_two_money_amounts(amt1, amt2) do
-    to_pips(string_to_integer_pips(amt1) + string_to_integer_pips(amt2))
-  end
-
   @spec ensure_decimal_point(String.t) :: String.t
   defp ensure_decimal_point(numeric_string) do
     case String.contains?(numeric_string, ".") do

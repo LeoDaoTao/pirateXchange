@@ -1,6 +1,7 @@
 defmodule PirateXchange.FxRates.FxRateTaskTest do
   use ExUnit.Case
 
+  alias PirateXchange.BypassHelper
   alias PirateXchange.FxRates.FxRateTask
   alias PirateXchange.FxRates.FxRateCache
 
@@ -17,9 +18,7 @@ defmodule PirateXchange.FxRates.FxRateTaskTest do
 
   describe "run/3" do
     test "shuld fetch the fx rate and store in FxRateCache", %{bypass: bypass} do
-      Bypass.expect(bypass, fn conn ->
-        Plug.Conn.resp(conn, 200, @ok_res)
-      end)
+      BypassHelper.bypass_expect(@ok_res, bypass)
 
       Process.sleep(20)
 

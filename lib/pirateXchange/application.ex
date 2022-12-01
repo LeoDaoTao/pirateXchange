@@ -6,6 +6,7 @@ defmodule PirateXchange.Application do
   alias PirateXchange.FxRates.FxRateTask
 
   # ConCache Settigns
+  @fx_rate_cache PirateXchange.Config.fx_rate_cache
   @global_ttl PirateXchange.Config.global_ttl
   @ttl_check_interval PirateXchange.Config.ttl_check_interval
   @available_currencies PirateXchange.Config.available_currencies
@@ -22,7 +23,7 @@ defmodule PirateXchange.Application do
       {Absinthe.Subscription, [PirateXchangeWeb.Endpoint]},
       {ConCache,
          [
-           name: :fx_rate_cache,
+           name: @fx_rate_cache,
            global_ttl: @global_ttl,
            ttl_check_interval: @ttl_check_interval,
            touch_on_read: false

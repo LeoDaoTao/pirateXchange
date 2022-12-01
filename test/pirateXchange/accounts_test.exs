@@ -2,6 +2,7 @@ defmodule PirateXchange.AccountsTest do
   use PirateXchange.DataCase
 
   alias PirateXchange.Accounts
+
   alias PirateXchange.Accounts.User
 
   import PirateXchange.UserFixtures,
@@ -13,8 +14,7 @@ defmodule PirateXchange.AccountsTest do
     test "should create a user with valid params",
       %{user_params: %{name: name, email: email}} do
 
-      assert {:ok, %User{name: ^name, email: ^email}} =
-        Accounts.create_user(%{name: name, email: email})
+      assert {:ok, %User{name: ^name, email: ^email}} = create_user(name, email)
 
       assert [%User{name: ^name, email: ^email}] = Repo.all(User)
     end
@@ -22,18 +22,15 @@ defmodule PirateXchange.AccountsTest do
     test "should not create user with duplicate email",
       %{user_params: %{name: name, email: email}} do
 
-      assert {:ok, %User{name: ^name, email: ^email}} =
-        Accounts.create_user(%{name: name, email: email})
+      assert {:ok, %User{name: ^name, email: ^email}} = create_user(name, email)
 
-      assert {:error, %Ecto.Changeset{} = changeset} =
-        Accounts.create_user(%{name: name, email: email})
+      assert {:error, %Ecto.Changeset{} = changeset} = create_user(name, email)
 
       assert %{email: ["has already been taken"]} = errors_on(changeset)
     end
 
     test "should not create user with invalid params" do
-      assert {:error, %Ecto.Changeset{} = changeset} =
-        Accounts.create_user(%{})
+      assert {:error, %Ecto.Changeset{} = changeset} = create_user("", "")
 
       assert %{email: ["can't be blank"], name: ["can't be blank"]} = errors_on(changeset)
     end
@@ -59,5 +56,9 @@ defmodule PirateXchange.AccountsTest do
       email = ctx.user1.email
       assert {:ok, %User{email: ^email}} = Accounts.find_user(%{email: email})
     end
+  end
+
+  defp create_user(name, email) do
+    Accounts.create_user(%{name: name, email: email})
   end
 end
