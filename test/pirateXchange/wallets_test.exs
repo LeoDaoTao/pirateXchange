@@ -1,5 +1,5 @@
 defmodule PirateXchange.WalletsTest do
-  use PirateXchange.DataCase, async: false
+  use PirateXchange.DataCase
 
   import PirateXchange.UserFixtures,
     only: [users: 1, wallets: 1, user_no_wallet: 1]
